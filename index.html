@@ -5,7 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Cosmic Elemental</title>
-<meta name="description" content="A World Built for Artists">
+
+<meta name="description" content="Cosmic Elemental - A World Built for Artists. Events, Education, Community and Artist Growth.">
+
+<meta name="keywords" content="Cosmic Elemental, Dance, Artists, Art Community, Events, Workshops, Education, Artist Agency">
+
+<meta property="og:title" content="Cosmic Elemental">
+<meta property="og:description" content="A World Built for Artists">
+<meta property="og:type" content="website">
+<meta property="og:image" content="logo.png">
+
+<link rel="icon" type="image/png" href="favicon.png">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 
@@ -17,50 +30,92 @@
 
 body{
     background:#000;
+    background-image:
+        radial-gradient(circle at top, #111 0%, #000 70%);
     color:#fff;
+    font-family:Georgia, serif;
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     text-align:center;
-    font-family:Georgia, serif;
+    overflow:hidden;
 }
 
 .container{
-    width:100%;
+    max-width:900px;
     padding:20px;
 }
 
-/* PERFECT SIZE */
 .logo{
-    width:min(650px,80vw);
-    height:auto;
-    display:block;
-    margin:0 auto;
+    width:320px;
+    max-width:90%;
+    margin-bottom:30px;
 }
 
-.coming{
-    margin-top:15px;
-    font-size:1.1rem;
+h1{
+    font-size:4rem;
     letter-spacing:4px;
-    color:#fff;
+    font-weight:400;
+    margin-bottom:10px;
 }
 
-.social{
-    margin-top:25px;
-}
-
-.social a{
-    color:#fff;
-    text-decoration:none;
-    font-size:1.1rem;
+.tagline{
+    font-size:1.4rem;
+    opacity:.85;
     letter-spacing:1px;
-    opacity:.9;
-    transition:.3s;
 }
 
-.social a:hover{
-    opacity:.6;
+.coming-soon{
+    margin-top:30px;
+    font-family:Arial, sans-serif;
+    font-size:2.5rem;
+    font-weight:300;
+}
+
+.socials{
+    margin-top:40px;
+}
+
+.socials a{
+    color:white;
+    font-size:2.2rem;
+    margin:0 15px;
+    transition:.3s ease;
+}
+
+.socials a:hover{
+    opacity:.65;
+}
+
+.footer{
+    margin-top:35px;
+    font-size:.95rem;
+    opacity:.55;
+    font-family:Arial, sans-serif;
+}
+
+@media(max-width:768px){
+
+.logo{
+    width:220px;
+}
+
+h1{
+    font-size:2.4rem;
+}
+
+.tagline{
+    font-size:1rem;
+}
+
+.coming-soon{
+    font-size:1.8rem;
+}
+
+.socials a{
+    font-size:1.8rem;
+}
 }
 
 </style>
@@ -70,20 +125,34 @@ body{
 
 <div class="container">
 
-    <img
-        src="CE OG WHITE 1.png"
-        alt="Cosmic Elemental"
-        class="logo"
-    >
+    <!-- Replace logo.png with your logo file -->
+    <img src="logo.png" alt="Cosmic Elemental Logo" class="logo">
 
-    <div class="coming">
-        COMING SOON
+    <div class="tagline">
+        A World Built for Artists
     </div>
 
-    <div class="social">
-        <a href="https://instagram.com/cosmicelemental" target="_blank">
-            @cosmicelemental
+    <div class="coming-soon">
+        Coming Soon
+    </div>
+
+    <div class="socials">
+
+        <a href="https://instagram.com/cosmicelemental" target="_blank" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
         </a>
+
+        <!-- Add LinkedIn when available -->
+        <!--
+        <a href="https://linkedin.com/company/cosmicelemental" target="_blank">
+            <i class="fab fa-linkedin"></i>
+        </a>
+        -->
+
+    </div>
+
+    <div class="footer">
+        © 2026 Cosmic Elemental. All Rights Reserved.
     </div>
 
 </div>
