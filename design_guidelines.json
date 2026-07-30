@@ -1,0 +1,134 @@
+{
+  "theme": "light",
+  "archetype": "Swiss Brutalist & Editorial High-Contrast",
+  "typography": {
+    "headings": {
+      "font_family": "Oswald, sans-serif",
+      "weights": ["600", "700"],
+      "tracking": "tracking-tighter",
+      "scale": "fluid scaling up to text-6xl or text-7xl for hero impact (since it's a condensed font, text-7xl is acceptable but scale proportionally for mobile)",
+      "usage": "Use strictly for main section headers, hero titles, and large numbers."
+    },
+    "body": {
+      "font_family": "Manrope, sans-serif",
+      "weights": ["400", "500", "600"],
+      "leading": "leading-relaxed",
+      "scale": "text-base for normal text, text-lg for subtitles",
+      "usage": "Use for paragraphs, descriptions, tags, and all UI elements."
+    },
+    "labels": {
+      "styles": "uppercase, tracking-[0.2em], text-xs font-bold"
+    }
+  },
+  "colors": {
+    "background": {
+      "primary": "#FAFAFA",
+      "secondary": "#FFFFFF",
+      "tertiary": "#F2F2F2"
+    },
+    "text": {
+      "primary": "#111111",
+      "secondary": "#555555",
+      "muted": "#888888"
+    },
+    "accent": {
+      "primary": "#FF5A00",
+      "hover": "#E65100",
+      "light": "#FFF3E0"
+    },
+    "borders": {
+      "default": "rgba(17, 17, 17, 0.1)",
+      "dark": "rgba(17, 17, 17, 1)"
+    },
+    "rules": [
+      "No dark/black backgrounds for main sections. Ensure strict adherence to off-white/light theme.",
+      "Use #FF5A00 (Amber/Fire tone) for primary Call-to-Actions, active states, and energetic accents.",
+      "Maintain a minimum 4.5:1 contrast ratio for all text.",
+      "Never use pure transparent backgrounds in headers or dropdowns to preserve legibility."
+    ]
+  },
+  "visual_enhancers": {
+    "textures": "Subtle noise or grain overlays on solid buttons or background sections to add a tactile 'editorial' feel.",
+    "borders": "Crisp 1px solid borders for structural elements (Bento Grids). Do not use soft fuzzy shadows. Use hard lines or solid color offsets.",
+    "radius": "Minimal rounded corners. Use rounded-sm (2px) or rounded-none for an edgy, professional publication look.",
+    "shadows": "Hard offset shadows or very subtle ambient shadows (shadow-sm). Avoid large blur spreads."
+  },
+  "layouts_and_spacing": {
+    "spacing_scale": "Use generous padding: p-8, p-12, p-16 for section spacing. Allow elements to breathe.",
+    "grid_system": "Bento Grid System for Event/Artist discovery. Asymmetrical spans (e.g., col-span-8 and col-span-4).",
+    "hero_section": "Editorial layout: Overlapping large typography, dynamic staggered layout, high-contrast imagery.",
+    "alignment": "Prioritize left-alignment for dense text. Center-alignment only for dramatic hero statements or final CTAs."
+  },
+  "motion_and_interactions": {
+    "philosophy": "Editorial Motion. Smooth, purposeful, staggered reveals.",
+    "hover_states": "Images should scale up slightly (scale-105) inside hidden overflow containers. Buttons should have color fill sweeps or translate-y-1 effects.",
+    "page_load": "Staggered text reveals (framer-motion or simple CSS keyframes). Large headings sliding up from masked containers.",
+    "libraries": "framer-motion for interactions, react-fast-marquee for editorial ribbon/ticker tapes (e.g., announcing upcoming big events)."
+  },
+  "components": {
+    "navigation": "Sticky, backdrop-blur-xl with solid white/off-white background (e.g., bg-white/90). Must have clear links and Accent button.",
+    "buttons": "Flat, solid colors. Primary CTA: bg-[#FF5A00] text-white hover:bg-[#E65100]. Secondary: bg-transparent border-2 border-black text-black hover:bg-black hover:text-white.",
+    "cards": "Flat design with 1px border. Image on top (aspect-video or square), clear bold typography below. Include tags for Event Type, Art Form, City.",
+    "forms": "Use Shadcn Form/Input components. Crisp borders, focus:ring-[#FF5A00]. Left-aligned labels.",
+    "modals": "Use Shadcn Dialog for the Multi-step Booking Request form and registration flows. Ensure high contrast and close buttons are visible.",
+    "tabs_filters": "Use Shadcn Tabs/Select. Make them look like pill-tags or clean underlined tabs. Highlight active tab with Accent color."
+  },
+  "image_urls": {
+    "hero_and_events": [
+      {
+        "url": "https://images.unsplash.com/photo-1604954055722-7f80571fbfc3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHw0fHxicmVha2RhbmNlJTIwYmF0dGxlfGVufDB8fHx8MTc4NTQxNDIzNnww&ixlib=rb-4.1.0&q=85",
+        "description": "Group of dancers, high energy, good for Event Discovery or Hero"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1611418608118-e6afdb56c35e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwzfHxicmVha2RhbmNlJTIwYmF0dGxlfGVufDB8fHx8MTc4NTQxNDIzNnww&ixlib=rb-4.1.0&q=85",
+        "description": "Breakdancer freeze pose, great for Battle/Cypher event card"
+      }
+    ],
+    "artists_and_music": [
+      {
+        "url": "https://images.unsplash.com/photo-1541126274323-dbac58d14741?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDZ8MHwxfHNlYXJjaHwyfHxkaiUyMHBlcmZvcm1pbmclMjBsaXZlfGVufDB8fHx8MTc4NTQxNDIzNnww&ixlib=rb-4.1.0&q=85",
+        "description": "DJ performing live, for Artist Directory or Music Event"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1544785349-c4a5301826fd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDZ8MHwxfHNlYXJjaHw0fHxkaiUyMHBlcmZvcm1pbmclMjBsaXZlfGVufDB8fHx8MTc4NTQxNDIzNnww&ixlib=rb-4.1.0&q=85",
+        "description": "DJ mixer equipment"
+      }
+    ],
+    "classes_and_studios": [
+      {
+        "url": "https://images.unsplash.com/photo-1775568351184-97ef5387a7db?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzV8MHwxfHNlYXJjaHw0fHxkYW5jZSUyMGNsYXNzJTIwc3R1ZGlvfGVufDB8fHx8MTc4NTQxNDIzNXww&ixlib=rb-4.1.0&q=85",
+        "description": "Ballet dancers in motion, perfect for Classes & Workshops module"
+      }
+    ],
+    "visual_arts": [
+      {
+        "url": "https://images.unsplash.com/photo-1501084817091-a4f3d1d19e07?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHwzfHxncmFmZml0aSUyMGFydGlzdCUyMGF0JTIwd29ya3xlbnwwfHx8fDE3ODU0MTQyMzZ8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Painted wall with painting materials, for Graffiti/Visual Artists directory"
+      }
+    ]
+  },
+  "accessibility": {
+    "contrast": "Ensure all text against the off-white background passes WCAG AA minimums (4.5:1).",
+    "motion": "Respect prefers-reduced-motion media query for staggered animations.",
+    "testing": "All interactive elements must include a data-testid attribute."
+  },
+  "instructions_to_main_agent": [
+    "Prioritize a light theme. DO NOT use dark mode or black backgrounds as requested by the user.",
+    "Implement bold editorial typography using Oswald for headers and Manrope for body text.",
+    "Apply the primary accent color #FF5A00 for CTAs, hovered states, and active navigational elements.",
+    "Leverage Shadcn UI components for complex interactions like modals (Booking Request), dropdowns, and form inputs, but strip away the default Vercel-look to match the crisp, solid-border aesthetic of the design.",
+    "Use framer-motion for smooth staggered reveals of text and bento grid elements on page load/scroll.",
+    "Ensure the layout mimics a high-end editorial publication: asymmetrical grids, generous whitespace, large typography, and sharp structural lines.",
+    "Images should have a subtle hover effect (scale up inside a hidden overflow wrapper).",
+    "Write components in .jsx or .js as per the project setup. No .tsx files."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. Avoid this: make creative, distinctive frontends that surprise and delight.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "You MUST NOT apply universal transition (transition: all). Always add transitions for specific interactive elements excluding transforms.",
+    "You MUST NOT center align the app container (.App { text-align: center; }).",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "Use sonner for toasts from /app/frontend/src/components/ui/sonner (or install if needed)."
+  ]
+}
