@@ -6,11 +6,14 @@ import pytest
 import requests
 from pymongo import MongoClient
 from bson import ObjectId
+from dotenv import load_dotenv
+
+load_dotenv("/app/backend/.env")
 
 BASE = os.environ.get("REACT_APP_BACKEND_URL", "https://cosmic-events-13.preview.emergentagent.com").rstrip("/")
 API = f"{BASE}/api"
-ADMIN_EMAIL = "mitabvishh369@gmail.com"
-ADMIN_PASSWORD = "Cosmic@Admin2026!"
+ADMIN_EMAIL = os.environ["ADMIN_EMAIL"]
+ADMIN_PASSWORD = os.environ["ADMIN_PASSWORD"]
 
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
 DB_NAME = os.environ.get("DB_NAME", "cosmic_elemental")
@@ -59,7 +62,7 @@ def test_subscription_free_trial_artist_then_paid():
         json={"plan":"artist","origin_url": BASE}, headers=H(u["token"]))
     assert r.status_code == 200, r.text
     j = r.json()
-    assert j.get("free_trial") is True
+    assert j.get("free_trial") == True
     # /mine
     r2 = requests.get(f"{API}/subscriptions/mine", headers=H(u["token"]))
     assert r2.status_code == 200
@@ -85,7 +88,7 @@ def test_subscription_organizer_role_promote():
     r = requests.post(f"{API}/subscriptions/checkout",
         json={"plan":"organizer","origin_url": BASE}, headers=H(u["token"]))
     assert r.status_code == 200
-    assert r.json().get("free_trial") is True
+    assert r.json().get("free_trial") == True
     me = requests.get(f"{API}/auth/me", headers=H(u["token"])).json()
     assert me["user"]["role"] == "organizer"
 
@@ -257,7 +260,7 @@ def test_featured_artist_toggle_and_sort(admin_token):
     # toggle featured
     r2 = requests.patch(f"{API}/admin/artists/{aid}/feature", json={"featured": True}, headers=H(admin_token))
     assert r2.status_code == 200
-    assert r2.json()["featured"] is True
+    assert r2.json()["featured"] == True
     # non-admin forbidden
     other = _register("user")
     r3 = requests.patch(f"{API}/admin/artists/{aid}/feature", json={"featured": True}, headers=H(other["token"]))

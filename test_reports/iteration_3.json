@@ -1,0 +1,31 @@
+{
+  "summary": "Iteration 3 — regression pass after code-review fixes (dotenv in tests, AuthContext warn, stable React keys, == True). Ran full pytest suite: 32/32 PASS after a single test-data adjustment (see below). Ran Playwright smoke: signup→dashboard shows all 5 tabs (events/registrations/classes/artist/subscription), /pricing renders 3 plan cards with ₹, event detail loads, share buttons visible, zero React key warnings, zero non-401 console warnings on landing (confirms AuthContext.jsx no-longer-swallows fix is well-scoped — 401 is silenced, other statuses would console.warn).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/test_phase2.py",
+    "/app/test_reports/pytest/iter3_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Detail.jsx L138 Block component still uses key={i} on items.map((x,i)=><li key={i}>) — the review request explicitly listed 'Detail Block tag lists' as fixed with stable keys. Items are strings (specializations/tags), so key={x} would be the intended stable key. Very minor — items are static per render so no visible bug, but the fix is incomplete relative to what was claimed.",
+    "backend_test.py test_payment_paid_flow used registration_fee=10.0 which, with CURRENCY=inr, converts to ~USD $0.10 — below Stripe's 50-cent minimum, causing a 500 (CheckoutError). This is a pre-existing test-data drift from Phase 2's currency switch to INR. Bumped to 500.0 in the test. Backend behavior itself is correct — it surfaces Stripe's error as 500. Consider translating Stripe CheckoutError to 400 with a user-friendly message and/or enforcing a minimum registration_fee at model validation.",
+    "test_phase2.py::test_payment_status_creates_registration_on_paid returns a str value (PytestReturnNotNoneWarning). Change the trailing `return sid` to a plain assert to silence the warning.",
+    "Carried over from iter 2: server.py L785 CORS allow_origins=['*'] + allow_credentials=True — browsers ignore Set-Cookie; Bearer path works but cookie SPA login is effectively disabled."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py (test_payment_paid_flow: registration_fee 10.0 → 500.0 for Stripe INR minimum)"
+  ],
+  "success_rate": {"backend": "100% (32/32 after test-data fix)", "frontend": "100% of listed regressions verified"},
+  "test_credentials": "Admin: mitabvishh369@gmail.com / Cosmic@Admin2026! from backend/.env (verified). Ephemeral test users via /api/auth/register.",
+  "seed_data_creation": "Ephemeral TEST_/test_ users + one TEST_Paid event created during pytest run; test_phase2.py cleans-through via Mongo (existing behavior).",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Both pytest suites are green (32/32). Run: `python -m pytest /app/backend/tests/ -n 0 -v`. If Stripe minimum changes or CURRENCY is switched, adjust test_payment_paid_flow's registration_fee. Preview URL: https://cosmic-events-13.preview.emergentagent.com. AuthContext.jsx now console.warns only on non-401 /me errors — landing shows only browser-network 401 (expected) and no JS warnings. React key warnings during signup→dashboard and event detail: zero.",
+  "rca of the issue": "Only failure was test_payment_paid_flow: root cause = registration_fee=10.0 INR × ~$0.012 = $0.10 < Stripe $0.50 minimum → CheckoutError → server 500. Mitigation applied in test (fee 500.0). Recommended in-app fix: convert stripe CheckoutError to 400 in checkout endpoint and add MIN_FEE validation on event/class create."
+}

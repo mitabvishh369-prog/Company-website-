@@ -109,7 +109,7 @@ function ItemForm({ kind, initial, onClose }) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
     setF({...f, flyers: arr});
   };
-  const addTicket = () => setF({...f, ticket_types:[...(f.ticket_types||[]), {name:'Standard', price:0}]});
+  const addTicket = () => setF({...f, ticket_types:[...(f.ticket_types||[]), {name:'Standard', price:0, _k: `t-${Date.now()}-${Math.random().toString(36).slice(2,7)}`}]});
   const updateTicket = (i, k, v) => { const arr = [...f.ticket_types]; arr[i] = {...arr[i], [k]: k==='price'?parseFloat(v)||0:v}; setF({...f, ticket_types: arr}); };
   const removeTicket = (i) => setF({...f, ticket_types: f.ticket_types.filter((_,idx)=>idx!==i)});
 
@@ -144,7 +144,7 @@ function ItemForm({ kind, initial, onClose }) {
               <div className="label-eyebrow mb-2">Ticket types</div>
               <div className="space-y-2">
                 {(f.ticket_types||[]).map((t,i)=>(
-                  <div key={i} className="flex gap-2 items-center">
+                  <div key={t._k || `ticket-${i}`} className="flex gap-2 items-center">
                     <input placeholder="Name (e.g. Solo)" value={t.name} onChange={e=>updateTicket(i,'name',e.target.value)} className="flex-1 px-3 py-2 border"/>
                     <input placeholder="Price" type="number" value={t.price} onChange={e=>updateTicket(i,'price',e.target.value)} className="w-32 px-3 py-2 border"/>
                     <button type="button" onClick={()=>removeTicket(i)}><Trash2 size={14} className="text-red-600"/></button>
@@ -162,7 +162,7 @@ function ItemForm({ kind, initial, onClose }) {
               <div className="label-eyebrow mb-2">Event flyer gallery <span className="text-[color:var(--muted)] normal-case text-xs tracking-normal font-normal">— recommended 1080 × 1350 px. Order shown here = order on the event page.</span></div>
               <div className="space-y-2">
                 {(f.flyers||[]).map((url, i)=>(
-                  <div key={i} data-testid={`flyer-row-${i}`} className="flex items-center gap-3 p-2 border border-[color:var(--line)] bg-[color:var(--bg-2)]">
+                  <div key={url} data-testid={`flyer-row-${i}`} className="flex items-center gap-3 p-2 border border-[color:var(--line)] bg-[color:var(--bg-2)]">
                     <div className="flex flex-col"><button type="button" onClick={()=>moveFlyer(i,-1)} className="text-[color:var(--muted)] hover:text-[color:var(--ink)] text-xs">▲</button><button type="button" onClick={()=>moveFlyer(i,1)} className="text-[color:var(--muted)] hover:text-[color:var(--ink)] text-xs">▼</button></div>
                     <GripVertical size={14} className="text-[color:var(--muted)]"/>
                     <div className="w-16 h-20 bg-[color:var(--bg-3)] shrink-0"><img src={fileUrl(url)} className="w-full h-full object-cover"/></div>
@@ -234,7 +234,7 @@ function ArtistProfileForm() {
       <Input label="Contact email" type="email" v={f.contact_email} on={v=>setF({...f,contact_email:v})}/>
       <label className="md:col-span-2 border border-dashed p-4 flex items-center gap-3 cursor-pointer hover:border-[color:var(--accent)]"><Upload size={14}/>Avatar<input type="file" accept="image/*" className="hidden" onChange={e=>upload(e,'avatar_url')} data-testid="upload-avatar"/></label>
       <label className="md:col-span-2 border border-dashed p-4 flex items-center gap-3 cursor-pointer hover:border-[color:var(--accent)]"><Upload size={14}/>Portfolio image<input type="file" accept="image/*" className="hidden" onChange={e=>upload(e,'portfolio')} data-testid="upload-portfolio"/></label>
-      {f.portfolio_images?.length>0 && <div className="md:col-span-2 grid grid-cols-4 gap-2">{f.portfolio_images.map((p,i)=><div key={i} className="aspect-square bg-[color:var(--bg-3)]"><img src={fileUrl(p)} className="w-full h-full object-cover"/></div>)}</div>}
+      {f.portfolio_images?.length>0 && <div className="md:col-span-2 grid grid-cols-4 gap-2">{f.portfolio_images.map((p,i)=><div key={p} className="aspect-square bg-[color:var(--bg-3)]"><img src={fileUrl(p)} className="w-full h-full object-cover"/></div>)}</div>}
       <button disabled={busy} data-testid="artist-save" className="btn-accent md:col-span-2 justify-center">{busy?'…':'Save & submit for review →'}</button>
     </form>
   );

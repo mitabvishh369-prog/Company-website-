@@ -12,8 +12,14 @@ export function AuthProvider({ children }) {
     try {
       const { data } = await api.get("/auth/me");
       setUser(data.user);
-    } catch { setUser(null); }
-    finally { setLoading(false); }
+    } catch (err) {
+      // 401 on first load is expected for unauthenticated visitors.
+      // Anything else is worth surfacing while debugging.
+      if (err?.response?.status && err.response.status !== 401) {
+        console.warn("[auth] /me failed:", err.response.status);
+      }
+      setUser(null);
+    } finally { setLoading(false); }
   }, []);
 
   useEffect(() => {
@@ -27,7 +33,7 @@ export function AuthProvider({ children }) {
           setUser(data.user);
           window.history.replaceState(null, "", window.location.pathname);
         })
-        .catch(() => {})
+        .catch(err => console.warn("[auth] google exchange failed:", err?.response?.status))
         .finally(() => refresh());
     } else {
       refresh();
@@ -45,7 +51,8 @@ export function AuthProvider({ children }) {
     setUser(data.user); return data.user;
   };
   const logout = async () => {
-    try { await api.post("/auth/logout"); } catch {}
+    try { await api.post("/auth/logout"); }
+    catch (err) { console.warn("[auth] logout endpoint failed:", err?.response?.status); }
     localStorage.removeItem("ce_token"); setUser(null);
   };
   const startGoogle = () => {

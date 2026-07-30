@@ -46,7 +46,7 @@ export function EventDetail() {
               {gallery.length > 1 && (<>
                 <button onClick={()=>setCarouselIdx((carouselIdx-1+gallery.length)%gallery.length)} data-testid="carousel-prev" className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full"><ChevronLeft size={16}/></button>
                 <button onClick={()=>setCarouselIdx((carouselIdx+1)%gallery.length)} data-testid="carousel-next" className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full"><ChevronRight size={16}/></button>
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">{gallery.map((_,i)=><button key={i} onClick={()=>setCarouselIdx(i)} className={`w-2 h-2 rounded-full ${i===carouselIdx?'bg-white':'bg-white/50'}`}/>)}</div>
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">{gallery.map((g,i)=><button key={`dot-${g}-${i}`} onClick={()=>setCarouselIdx(i)} className={`w-2 h-2 rounded-full ${i===carouselIdx?'bg-white':'bg-white/50'}`}/>)}</div>
               </>)}
             </div>
             <div className="p-6 border border-[color:var(--ink)] bg-white">
@@ -207,7 +207,7 @@ export function ArtistDetail() {
               <h1 className="font-display font-bold text-6xl lg:text-8xl leading-[0.9] mt-4 tracking-tighter">{d.stage_name}</h1>
               <div className="mt-4 flex flex-wrap gap-2">{(d.specializations||[]).map(s=><span key={s} className="tag">{s}</span>)}</div>
               <p className="mt-8 text-[color:var(--ink-2)] whitespace-pre-line leading-relaxed">{d.bio}</p>
-              {d.achievements?.length>0 && <div className="mt-8"><h3 className="label-eyebrow mb-3">Achievements</h3><ul className="space-y-1 text-[color:var(--ink-2)]">{d.achievements.map((a,i)=><li key={i}>◆ {a}</li>)}</ul></div>}
+              {d.achievements?.length>0 && <div className="mt-8"><h3 className="label-eyebrow mb-3">Achievements</h3><ul className="space-y-1 text-[color:var(--ink-2)]">{d.achievements.map((a,i)=><li key={`ach-${i}-${a.slice(0,10)}`}>◆ {a}</li>)}</ul></div>}
             </div>
             <aside className="lg:col-span-4">
               <div className="flex flex-col gap-3">
@@ -219,7 +219,7 @@ export function ArtistDetail() {
               </div>
             </aside>
           </div>
-          {d.portfolio_images?.length>0 && <div className="mt-10"><h3 className="label-eyebrow mb-4">Portfolio</h3><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{d.portfolio_images.map((p,i)=><div key={i} className="aspect-square img-hover bg-[color:var(--bg-3)]"><img src={fileUrl(p)} className="w-full h-full object-cover"/></div>)}</div></div>}
+          {d.portfolio_images?.length>0 && <div className="mt-10"><h3 className="label-eyebrow mb-4">Portfolio</h3><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{d.portfolio_images.map((p,i)=><div key={p} className="aspect-square img-hover bg-[color:var(--bg-3)]"><img src={fileUrl(p)} className="w-full h-full object-cover"/></div>)}</div></div>}
         </div>
       </section>
       {open && <BookingModal artist={d} onClose={()=>setOpen(false)}/>}

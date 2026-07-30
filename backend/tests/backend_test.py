@@ -3,12 +3,15 @@ session cookie persistence) so Bearer tokens control auth."""
 import os, io, uuid
 import pytest
 import requests
+from dotenv import load_dotenv
+
+load_dotenv("/app/backend/.env")
 
 BASE = os.environ.get("REACT_APP_BACKEND_URL", "https://cosmic-events-13.preview.emergentagent.com").rstrip("/")
 API = f"{BASE}/api"
 
-ADMIN_EMAIL = "mitabvishh369@gmail.com"
-ADMIN_PASSWORD = "Cosmic@Admin2026!"
+ADMIN_EMAIL = os.environ["ADMIN_EMAIL"]
+ADMIN_PASSWORD = os.environ["ADMIN_PASSWORD"]
 
 def _uniq(prefix="user"):
     return f"test_{prefix}_{uuid.uuid4().hex[:8]}@example.com"
@@ -53,7 +56,7 @@ _state = {}
 def test_health_root():
     r = rq.get(f"{API}/", timeout=15)
     assert r.status_code == 200
-    assert r.json().get("ok") is True
+    assert r.json().get("ok") == True
 
 # ---- Auth -------------------------------------------------------------------
 def test_admin_login_sets_cookie_and_role():
@@ -215,10 +218,10 @@ def test_payment_free_flow(organizer, admin_token):
                 json={"kind":"event","ref_id":eid,"origin_url":BASE},
                 headers=H(organizer["token"]))
     assert r.status_code == 200, r.text
-    assert r.json().get("free") is True
+    assert r.json().get("free") == True
 
 def test_payment_paid_flow(organizer, admin_token):
-    payload = _event_payload("TEST_Paid"); payload["registration_fee"] = 10.0
+    payload = _event_payload("TEST_Paid"); payload["registration_fee"] = 500.0
     r = rq.post(f"{API}/events", json=payload, headers=H(organizer["token"]))
     eid = r.json()["id"]
     rq.patch(f"{API}/admin/events/{eid}", json={"status":"approved"}, headers=H(admin_token))
