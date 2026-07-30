@@ -9,7 +9,9 @@ import { EventDetail, ClassDetail, ArtistDetail } from "@/pages/Detail";
 import Dashboard from "@/pages/Dashboard";
 import Admin from "@/pages/Admin";
 import About from "@/pages/About";
+import Pricing from "@/pages/Pricing";
 import { PaymentSuccess, PaymentCancel } from "@/pages/Payment";
+import { SubscriptionSuccess, SubscriptionCancel } from "@/pages/Subscription";
 
 export default function App() {
   return (
@@ -28,8 +30,11 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/admin" element={<Admin/>} />
           <Route path="/about" element={<About/>} />
+          <Route path="/pricing" element={<Pricing/>} />
           <Route path="/payment/success" element={<PaymentSuccess/>} />
           <Route path="/payment/cancel" element={<PaymentCancel/>} />
+          <Route path="/subscription/success" element={<SubscriptionSuccess/>} />
+          <Route path="/subscription/cancel" element={<SubscriptionCancel/>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
