@@ -30,6 +30,17 @@ A centralized platform to organize and connect the global creative community —
 - Design: Light theme, Oswald + Manrope, warm orange accent, editorial motion.
 
 ## Backlog / Next Priorities
-- P0: Testing pass + fixes; email notifications on booking + approval.
-- P1: Multi-image gallery upload; artist "featured" tier; event registration confirmation email; user profile page.
-- P2: In-platform messaging between clients & artists; artist reviews; recurring class batches; sponsor logo uploads; SEO / OG tags per event.
+- P1: Registration CSV filter presets (paid-only, date range); recurring class batches; sponsor logos with upload
+- P2: In-platform messaging between clients & artists; artist reviews & ratings; branded PNG share-card generator (Instagram 1:1); subscription auto-renewal via Stripe subscriptions API
+- P2: SEO / sitemap; multi-language (i18n); dark theme toggle for admin
+- Ops: Consider tightening CORS from `*` to FRONTEND_URL so cookie login works alongside Bearer.
+
+## Implemented — Phase 2 (Feb 2026)
+- 3-tier subscriptions (Viewer ₹30 / Artist ₹99 / Organizer ₹99), 30-day free trial for first sub, auto role-promotion on artist/organizer.
+- 6% platform commission on paid registrations (INR); shown at checkout + stored on payment_transactions and registrations.
+- Registrations capture participant details (name/email/phone/category/ticket_type/txn ID). Multi-tier ticket_types per event.
+- Organizer Registrations dashboard: event selector, search, filter (paid/free/pending), sort, one-click CSV export.
+- Event Flyer Gallery: multi-upload, move-up/down reorder, swipeable carousel on event page (1080×1350 recommended).
+- Resend transactional emails: registration confirmation, payment success, new-registration-to-organizer, event/class/artist approval, booking received (attendee) + admin alert, subscription active. Managed via EMERGENT_EMAIL_KEY.
+- Featured Artists — admin toggle to pin approved artists to top of directory (sorted by featured DESC, then created_at).
+- Share assets: WhatsApp / X (Twitter) / Facebook / copy-link buttons on event page + `/api/share/event/{id}` OG endpoint with og:title / og:image / og:url for external previews.
