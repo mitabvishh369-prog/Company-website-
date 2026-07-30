@@ -193,8 +193,6 @@ def test_payment_status_creates_registration_on_paid(organizer, admin_token):
     reg = db.registrations.find_one({"session_id": sid})
     assert reg is not None
     assert reg["name"] == "TEST Carol" and reg["status"] == "confirmed"
-    # store for csv test
-    return eid
 
 # ---- Owner-only registrations + CSV -----------------------------------------
 def test_event_registrations_and_csv(organizer, admin_token):
