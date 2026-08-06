@@ -8,6 +8,7 @@ import { EventsList, ClassesList, ArtistsList } from "@/pages/Discovery";
 import { EventDetail, ClassDetail, ArtistDetail } from "@/pages/Detail";
 import Dashboard from "@/pages/Dashboard";
 import Admin from "@/pages/Admin";
+import AdminFinance from "@/pages/AdminFinance";
 import About from "@/pages/About";
 import Pricing from "@/pages/Pricing";
 import { PaymentSuccess, PaymentCancel } from "@/pages/Payment";
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/auth" element={<Auth/>} />
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/admin" element={<Admin/>} />
+          <Route path="/admin/finance" element={<AdminFinance/>} />
           <Route path="/about" element={<About/>} />
           <Route path="/pricing" element={<Pricing/>} />
           <Route path="/payment/success" element={<PaymentSuccess/>} />

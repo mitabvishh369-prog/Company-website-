@@ -121,6 +121,16 @@ function ItemForm({ kind, initial, onClose }) {
           <button onClick={onClose}><X/></button>
         </div>
         <form onSubmit={submit} className="p-6 grid md:grid-cols-2 gap-4">
+          {kind==='events' && (
+            <div className="md:col-span-2 border-l-4 border-[color:var(--accent)] bg-[color:var(--accent-light)] px-4 py-3 text-sm" data-testid="commission-notice">
+              <b>Cosmic Elemental fee:</b> 6% platform commission applies to paid registrations. Example: fee ₹1,000 → ₹60 commission → you receive ₹940 per registration. Applied automatically at checkout.
+            </div>
+          )}
+          {kind==='classes' && (
+            <div className="md:col-span-2 border-l-4 border-[color:var(--accent)] bg-[color:var(--accent-light)] px-4 py-3 text-sm" data-testid="commission-notice">
+              <b>Cosmic Elemental fee:</b> 6% platform commission applies to paid class/workshop enrolments. Example: fee ₹1,000 → ₹60 commission → you receive ₹940 per enrolment. Applied automatically at checkout.
+            </div>
+          )}
           <Input label="Title" v={f.title} on={v=>setF({...f,title:v})} required col2/>
           <Textarea label="Description" v={f.description} on={v=>setF({...f,description:v})} col2/>
           {kind==='events' ? <>

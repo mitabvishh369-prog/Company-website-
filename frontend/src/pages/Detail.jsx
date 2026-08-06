@@ -189,10 +189,17 @@ export function ClassDetail() {
 
 export function ArtistDetail() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [d, setD] = useState(null); const [open, setOpen] = useState(false);
-  useEffect(()=>{ api.get(`/artists/${id}`).then(r=>setD(r.data)); }, [id]);
+  const [ratings, setRatings] = useState([]); const [showRate, setShowRate] = useState(false);
+  const load = () => {
+    api.get(`/artists/${id}`).then(r=>setD(r.data));
+    api.get(`/artists/${id}/ratings`).then(r=>setRatings(r.data)).catch(()=>{});
+  };
+  useEffect(load, [id]);
   if (!d) return <div className="p-20 text-center text-[color:var(--muted)]">Loading…</div>;
   const cover = fileUrl(d.cover_url || d.portfolio_images?.[0]) || "https://images.unsplash.com/photo-1541126274323-dbac58d14741?crop=entropy&cs=srgb&fm=jpg&q=85";
+  const avg = d.rating_avg || 0; const count = d.rating_count || 0;
   return (
     <div data-testid="artist-detail"><Toaster/>
       <section className="relative">
@@ -205,6 +212,13 @@ export function ArtistDetail() {
               {d.featured && <div className="tag tag-accent mb-3">★ Featured artist</div>}
               <div className="label-eyebrow text-[color:var(--muted)]">{d.city}, {d.country}</div>
               <h1 className="font-display font-bold text-6xl lg:text-8xl leading-[0.9] mt-4 tracking-tighter">{d.stage_name}</h1>
+              {count > 0 && (
+                <div className="mt-4 flex items-center gap-3" data-testid="artist-rating-summary">
+                  <div className="flex gap-0.5">{[1,2,3,4,5].map(n => <span key={n} className={n <= Math.round(avg) ? 'text-[color:var(--accent)]' : 'text-[color:var(--line)]'}>★</span>)}</div>
+                  <span className="text-sm font-semibold tabular-nums">{avg.toFixed(1)}</span>
+                  <span className="text-xs text-[color:var(--muted)]">({count} {count===1?'review':'reviews'})</span>
+                </div>
+              )}
               <div className="mt-4 flex flex-wrap gap-2">{(d.specializations||[]).map(s=><span key={s} className="tag">{s}</span>)}</div>
               <p className="mt-8 text-[color:var(--ink-2)] whitespace-pre-line leading-relaxed">{d.bio}</p>
               {d.achievements?.length>0 && <div className="mt-8"><h3 className="label-eyebrow mb-3">Achievements</h3><ul className="space-y-1 text-[color:var(--ink-2)]">{d.achievements.map((a,i)=><li key={`ach-${i}-${a.slice(0,10)}`}>◆ {a}</li>)}</ul></div>}
@@ -212,6 +226,7 @@ export function ArtistDetail() {
             <aside className="lg:col-span-4">
               <div className="flex flex-col gap-3">
                 <button onClick={()=>setOpen(true)} data-testid="artist-book-btn" className="btn-accent justify-center">Book this artist →</button>
+                {user && <button onClick={()=>setShowRate(true)} data-testid="rate-artist-btn" className="btn-outline justify-center">★ Rate this artist</button>}
                 <div className="text-sm text-[color:var(--muted)] hairline pb-4">Experience · <b className="text-[color:var(--ink)]">{d.experience_years} yrs</b></div>
                 {d.social_links?.instagram && <a href={d.social_links.instagram} target="_blank" rel="noreferrer" className="link-under inline-flex items-center gap-2 text-sm"><Instagram size={14}/>Instagram</a>}
                 {d.social_links?.youtube && <a href={d.social_links.youtube} target="_blank" rel="noreferrer" className="link-under inline-flex items-center gap-2 text-sm"><Youtube size={14}/>YouTube</a>}
@@ -220,10 +235,63 @@ export function ArtistDetail() {
             </aside>
           </div>
           {d.portfolio_images?.length>0 && <div className="mt-10"><h3 className="label-eyebrow mb-4">Portfolio</h3><div className="grid grid-cols-2 md:grid-cols-4 gap-3">{d.portfolio_images.map((p,i)=><div key={p} className="aspect-square img-hover bg-[color:var(--bg-3)]"><img src={fileUrl(p)} className="w-full h-full object-cover"/></div>)}</div></div>}
+          {ratings.length>0 && (
+            <div className="mt-10 pt-8 border-t border-[color:var(--line)]" data-testid="ratings-list">
+              <h3 className="label-eyebrow mb-4">Client reviews</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                {ratings.map(r => (
+                  <div key={r.id} className="p-4 border border-[color:var(--line)]" data-testid={`rating-${r.id}`}>
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold">{r.reviewer_name || 'Client'}</span>
+                      <span className="text-[color:var(--accent)]">{'★'.repeat(r.stars)}<span className="text-[color:var(--line)]">{'★'.repeat(5 - r.stars)}</span></span>
+                    </div>
+                    {r.project_name && <div className="text-xs text-[color:var(--muted)] mt-1">{r.project_name}</div>}
+                    {r.comment && <p className="text-sm text-[color:var(--ink-2)] mt-2 leading-relaxed">{r.comment}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
       {open && <BookingModal artist={d} onClose={()=>setOpen(false)}/>}
+      {showRate && <RatingModal artistId={id} onClose={()=>{setShowRate(false); load();}}/>}
       <Footer/>
+    </div>
+  );
+}
+
+function RatingModal({ artistId, onClose }) {
+  const [stars, setStars] = useState(5); const [hover, setHover] = useState(0);
+  const [f, setF] = useState({ project_name: '', comment: '' });
+  const [busy, setBusy] = useState(false);
+  const submit = async e => {
+    e.preventDefault(); setBusy(true);
+    try {
+      await api.post(`/artists/${artistId}/ratings`, { stars, ...f });
+      toast.success("Thanks — your review is live.");
+      onClose();
+    } catch (e) { toast.error(formatErr(e)); } finally { setBusy(false); }
+  };
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={onClose} data-testid="rating-modal">
+      <div className="bg-white max-w-md w-full border border-[color:var(--ink)]" onClick={e=>e.stopPropagation()}>
+        <div className="p-6 hairline flex justify-between items-center"><h3 className="font-display text-2xl font-bold">Rate this artist</h3><button onClick={onClose}><X/></button></div>
+        <form onSubmit={submit} className="p-6 space-y-4">
+          <div>
+            <span className="label-eyebrow block mb-2">Rating</span>
+            <div className="flex gap-1 text-3xl" data-testid="rating-stars">
+              {[1,2,3,4,5].map(n => (
+                <button key={n} type="button" onMouseEnter={()=>setHover(n)} onMouseLeave={()=>setHover(0)} onClick={()=>setStars(n)} data-testid={`star-${n}`} className={`transition-colors ${n <= (hover || stars) ? 'text-[color:var(--accent)]' : 'text-[color:var(--line)]'}`}>★</button>
+              ))}
+            </div>
+          </div>
+          <Row label="Project (optional)" v={f.project_name} on={v=>setF({...f, project_name: v})} tid="rating-project"/>
+          <label className="block"><span className="label-eyebrow block mb-2">Comment</span>
+            <textarea rows={4} value={f.comment} onChange={e=>setF({...f, comment: e.target.value})} data-testid="rating-comment" className="w-full px-4 py-3 border border-[color:var(--line)] focus:border-[color:var(--accent)] focus:outline-none"/></label>
+          <button disabled={busy} data-testid="rating-submit" className="btn-accent w-full justify-center">{busy?'…':'Submit review →'}</button>
+        </form>
+      </div>
     </div>
   );
 }

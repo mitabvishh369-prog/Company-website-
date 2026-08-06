@@ -41,6 +41,9 @@ export default function Admin() {
           <div key={k} className="card p-5"><div className="label-eyebrow text-[color:var(--muted)]">{k}</div><div className="font-display text-4xl font-bold mt-1">{v ?? '—'}</div></div>
         ))}
       </section>
+      <section className="max-w-[1440px] mx-auto px-6 lg:px-10 mt-6">
+        <button onClick={()=>nav('/admin/finance')} data-testid="go-finance" className="btn-accent"><span>Finance & Payouts →</span></button>
+      </section>
       <section className="max-w-[1440px] mx-auto px-6 lg:px-10 mt-10 border-b border-[color:var(--line-dark)]">
         <div className="flex gap-6 overflow-x-auto">
           {["events","classes","artists","featured","bookings"].map(t=><button key={t} onClick={()=>setTab(t)} data-testid={`admin-tab-${t}`} className={`py-4 label-eyebrow whitespace-nowrap ${tab===t?'text-[color:var(--accent)] border-b-2 border-[color:var(--accent)] -mb-px':'text-[color:var(--ink-2)]'}`}>{t}</button>)}

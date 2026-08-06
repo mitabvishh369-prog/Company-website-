@@ -57,9 +57,9 @@ export default function Pricing() {
         ))}
       </section>
       <section className="max-w-[1440px] mx-auto px-6 lg:px-10 py-16 border-t border-[color:var(--line-dark)]">
-        <div className="label-eyebrow text-[color:var(--muted)]">Commission model</div>
-        <h2 className="font-display text-5xl md:text-7xl font-bold leading-none mt-3">6% ON EVERY<br/><span className="text-[color:var(--accent)]">PAID REGISTRATION.</span></h2>
-        <p className="mt-6 max-w-2xl text-lg text-[color:var(--ink-2)]">Cosmic Elemental keeps a flat 6% commission on paid event and workshop registrations. The rest goes straight to the organizer. Example: registration fee of ₹1,000 → ₹60 platform fee → organizer receives ₹940. Calculated automatically at checkout.</p>
+        <div className="label-eyebrow text-[color:var(--muted)]">Frequently asked</div>
+        <h2 className="font-display text-5xl md:text-7xl font-bold leading-none mt-3">EVERY PLAN<br/><span className="text-[color:var(--accent)]">STARTS FREE.</span></h2>
+        <p className="mt-6 max-w-2xl text-lg text-[color:var(--ink-2)]">Try any plan free for 30 days. Cancel anytime. No card needed for the trial.</p>
       </section>
       <Footer/>
     </div>

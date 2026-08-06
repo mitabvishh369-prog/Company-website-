@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
+import LiveStats from "@/components/LiveStats";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { EventCard, ClassCard, ArtistCard } from "@/components/Cards";
@@ -79,6 +80,9 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* LIVE PLATFORM STATS */}
+      <LiveStats/>
 
       {/* FEATURED EVENTS */}
       {events.length > 0 && <Section title="UPCOMING EVENTS" eyebrow="Featured · Approved" to="/events">

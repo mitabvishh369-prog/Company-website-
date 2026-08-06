@@ -34,6 +34,7 @@ export default function Navbar() {
             <>
               <Link to="/dashboard" className="btn-outline text-sm" data-testid="nav-dashboard"><User size={14}/> {user.name?.split(' ')[0]}</Link>
               {user.role === 'admin' && <Link to="/admin" className="text-sm font-semibold link-under" data-testid="nav-admin">Admin</Link>}
+              {user.role === 'admin' && <Link to="/admin/finance" className="text-sm font-semibold link-under" data-testid="nav-finance">Finance</Link>}
               <button onClick={()=>{logout(); nav('/');}} className="text-sm font-semibold text-[color:var(--ink-2)] hover:text-[color:var(--accent)] transition-colors flex items-center gap-1" data-testid="nav-logout"><LogOut size={14}/> Logout</button>
             </>
           ) : (

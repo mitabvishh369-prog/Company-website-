@@ -596,20 +596,50 @@ async def sub_checkout(body: SubscribeIn, request: Request, bg: BackgroundTasks,
         bg.add_task(send_email, user["email"], f"Welcome to {plan['name']} — first month free",
                     subscription_active(user.get("name"), plan["name"], f"{FRONTEND_URL}/dashboard"))
         return {"free_trial": True, "checkout_url": f"{body.origin_url}/subscription/success?trial=1&plan={body.plan}"}
-    # Paid subscription checkout (one-time charge for the month; renewal handled manually / later)
-    host_url = str(request.base_url); webhook_url = f"{host_url}api/webhook/stripe"
-    co = StripeCheckout(api_key=os.environ.get("STRIPE_API_KEY","sk_test_emergent"), webhook_url=webhook_url)
-    req = CheckoutSessionRequest(amount=float(plan["price"]), currency=CURRENCY,
-        success_url=f"{body.origin_url}/subscription/success?session_id={{CHECKOUT_SESSION_ID}}",
-        cancel_url=f"{body.origin_url}/subscription/cancel",
-        metadata={"kind":"subscription","plan":body.plan,"user_id":user["id"],"email":user["email"]})
-    sess = await co.create_checkout_session(req)
+    # Paid recurring subscription checkout via Stripe subscription mode (auto-renew).
+    host_url = str(request.base_url)
+    try:
+        import stripe as stripe_sdk
+        stripe_sdk.api_key = os.environ.get("STRIPE_API_KEY","sk_test_emergent")
+        # Emergent proxies Stripe calls at integrations.emergentagent.com/stripe
+        stripe_sdk.api_base = "https://integrations.emergentagent.com/stripe"
+        cur = CURRENCY
+        session_obj = stripe_sdk.checkout.Session.create(
+            mode="subscription",
+            payment_method_types=["card"],
+            line_items=[{
+                "quantity": 1,
+                "price_data": {
+                    "currency": cur,
+                    "unit_amount": int(round(plan["price"] * 100)),
+                    "recurring": {"interval": "month"},
+                    "product_data": {"name": f"Cosmic Elemental — {plan['name']} plan"},
+                },
+            }],
+            success_url=f"{body.origin_url}/subscription/success?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{body.origin_url}/subscription/cancel",
+            metadata={"kind":"subscription","plan":body.plan,"user_id":user["id"],"email":user["email"]},
+            customer_email=user["email"],
+        )
+        sid = session_obj.get("id")
+        url = session_obj.get("url")
+    except Exception as e:
+        logger.warning(f"Stripe subscription mode failed, falling back to one-time: {e}")
+        webhook_url = f"{host_url}api/webhook/stripe"
+        co = StripeCheckout(api_key=os.environ.get("STRIPE_API_KEY","sk_test_emergent"), webhook_url=webhook_url)
+        req = CheckoutSessionRequest(amount=float(plan["price"]), currency=CURRENCY,
+            success_url=f"{body.origin_url}/subscription/success?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{body.origin_url}/subscription/cancel",
+            metadata={"kind":"subscription","plan":body.plan,"user_id":user["id"],"email":user["email"]})
+        sess = await co.create_checkout_session(req)
+        sid = sess.session_id; url = sess.url
     await db.payment_transactions.insert_one({
-        "session_id": sess.session_id, "user_id": user["id"], "email": user["email"],
+        "session_id": sid, "user_id": user["id"], "email": user["email"],
         "kind":"subscription","plan":body.plan,"amount":float(plan["price"]),"currency":CURRENCY,
+        "auto_renew": True,
         "status":"initiated","payment_status":"pending",
         "created_at": now.isoformat(),"updated_at": now.isoformat()})
-    return {"checkout_url": sess.url, "session_id": sess.session_id}
+    return {"checkout_url": url, "session_id": sid, "auto_renew": True}
 
 @api.get("/subscriptions/mine")
 async def my_subscription(user: dict = Depends(get_current_user)):
@@ -776,6 +806,266 @@ async def og_event(eid: str):
 <meta http-equiv='refresh' content='0;url={url}'/>
 </head><body><a href='{url}'>{title}</a></body></html>"""
     return FastAPIResponse(content=html, media_type="text/html")
+
+# --------- Public platform stats -------------------------------------------
+@api.get("/stats/public")
+async def public_stats():
+    approved = {"status":"approved"}
+    countries = set()
+    async for d in db.events.find(approved, {"country": 1}): countries.add((d.get("country") or "").strip())
+    async for d in db.classes.find(approved, {"country": 1}): countries.add((d.get("country") or "").strip())
+    async for d in db.artists.find(approved, {"country": 1}): countries.add((d.get("country") or "").strip())
+    countries.discard("")
+    return {
+        "events": await db.events.count_documents(approved),
+        "classes": await db.classes.count_documents(approved),
+        "artists": await db.artists.count_documents(approved),
+        "users": await db.users.count_documents({}),
+        "countries": len(countries),
+    }
+
+# --------- Artist Ratings --------------------------------------------------
+class RatingIn(BaseModel):
+    stars: int = Field(ge=1, le=5)
+    comment: Optional[str] = ""
+    reviewer_name: Optional[str] = ""
+    project_name: Optional[str] = ""
+
+@api.post("/artists/{aid}/ratings")
+async def rate_artist(aid: str, body: RatingIn, user: dict = Depends(get_current_user)):
+    try: artist = await db.artists.find_one({"_id": ObjectId(aid)})
+    except Exception: artist = None
+    if not artist: raise HTTPException(404, "Artist not found")
+    doc = {"artist_id": aid, "user_id": user["id"], "user_email": user["email"],
+           "stars": int(body.stars), "comment": body.comment or "",
+           "reviewer_name": body.reviewer_name or user.get("name"),
+           "project_name": body.project_name or "",
+           "created_at": datetime.now(timezone.utc).isoformat()}
+    await db.ratings.update_one({"artist_id": aid, "user_id": user["id"]}, {"$set": doc}, upsert=True)
+    total = 0; count = 0
+    async for r in db.ratings.find({"artist_id": aid}, {"stars":1}):
+        total += r["stars"]; count += 1
+    avg = round(total/count, 2) if count else 0
+    await db.artists.update_one({"_id": ObjectId(aid)},
+        {"$set": {"rating_avg": avg, "rating_count": count}})
+    return {"ok": True, "rating_avg": avg, "rating_count": count}
+
+@api.get("/artists/{aid}/ratings")
+async def list_ratings(aid: str):
+    docs = await db.ratings.find({"artist_id": aid}).sort("created_at", -1).to_list(500)
+    return [serialize(d) for d in docs]
+
+# --------- Admin Finance ---------------------------------------------------
+class BankAccountIn(BaseModel):
+    account_holder: str
+    account_number: str
+    ifsc_code: str
+    bank_name: str
+    branch: Optional[str] = ""
+    account_type: Optional[str] = "current"
+    is_primary: bool = False
+
+class OtpVerify(BaseModel):
+    otp: str
+
+class PayoutIn(BaseModel):
+    organizer_id: str
+    amount: float
+    method: Optional[str] = "bank_transfer"
+    reference: Optional[str] = ""
+    notes: Optional[str] = ""
+
+def _mask_account(num):
+    if not num: return ""
+    s = str(num)
+    return s[:2] + "*"*max(0,len(s)-6) + s[-4:] if len(s) > 6 else s
+
+async def _serialize_bank(d):
+    if not d: return d
+    d["account_number_masked"] = _mask_account(d.get("account_number",""))
+    d.pop("account_number", None); d.pop("otp", None); d.pop("otp_expires_at", None)
+    return serialize(d)
+
+@api.get("/admin/finance/bank-accounts")
+async def list_bank_accounts(admin: dict = Depends(require_admin)):
+    docs = await db.bank_accounts.find().sort("created_at",-1).to_list(50)
+    return [await _serialize_bank(d) for d in docs]
+
+@api.post("/admin/finance/bank-accounts")
+async def add_bank_account(body: BankAccountIn, admin: dict = Depends(require_admin)):
+    now = datetime.now(timezone.utc).isoformat()
+    if body.is_primary:
+        await db.bank_accounts.update_many({}, {"$set": {"is_primary": False}})
+    doc = body.model_dump()
+    doc.update({"verified": False, "created_at": now, "updated_at": now, "added_by": admin["id"]})
+    r = await db.bank_accounts.insert_one(doc); doc["_id"] = r.inserted_id
+    return await _serialize_bank(doc)
+
+@api.patch("/admin/finance/bank-accounts/{bid}")
+async def update_bank_account(bid: str, body: BankAccountIn, admin: dict = Depends(require_admin)):
+    upd = body.model_dump(); upd["updated_at"] = datetime.now(timezone.utc).isoformat()
+    upd["verified"] = False
+    if body.is_primary: await db.bank_accounts.update_many({}, {"$set": {"is_primary": False}})
+    await db.bank_accounts.update_one({"_id": ObjectId(bid)}, {"$set": upd})
+    return await _serialize_bank(await db.bank_accounts.find_one({"_id": ObjectId(bid)}))
+
+@api.delete("/admin/finance/bank-accounts/{bid}")
+async def delete_bank_account(bid: str, admin: dict = Depends(require_admin)):
+    await db.bank_accounts.delete_one({"_id": ObjectId(bid)}); return {"ok": True}
+
+@api.patch("/admin/finance/bank-accounts/{bid}/primary")
+async def set_primary_bank(bid: str, admin: dict = Depends(require_admin)):
+    await db.bank_accounts.update_many({}, {"$set": {"is_primary": False}})
+    await db.bank_accounts.update_one({"_id": ObjectId(bid)}, {"$set": {"is_primary": True}})
+    return await _serialize_bank(await db.bank_accounts.find_one({"_id": ObjectId(bid)}))
+
+@api.post("/admin/finance/bank-accounts/{bid}/otp-send")
+async def bank_otp_send(bid: str, bg: BackgroundTasks, admin: dict = Depends(require_admin)):
+    otp = f"{secrets.randbelow(1000000):06d}"
+    expires = (datetime.now(timezone.utc) + timedelta(minutes=10)).isoformat()
+    await db.bank_accounts.update_one({"_id": ObjectId(bid)},
+        {"$set": {"otp": otp, "otp_expires_at": expires}})
+    html = f"<p>Your Cosmic Elemental verification code:</p><p style='font-size:32px;letter-spacing:6px;font-weight:700;color:#FF5A00'>{otp}</p><p>Valid 10 minutes.</p>"
+    bg.add_task(send_email, admin["email"], "Cosmic Elemental — Bank verification code", html)
+    return {"ok": True, "sent_to": admin["email"], "expires_at": expires}
+
+@api.patch("/admin/finance/bank-accounts/{bid}/verify")
+async def bank_otp_verify(bid: str, body: OtpVerify, admin: dict = Depends(require_admin)):
+    d = await db.bank_accounts.find_one({"_id": ObjectId(bid)})
+    if not d: raise HTTPException(404, "Not found")
+    if not d.get("otp") or d.get("otp") != body.otp: raise HTTPException(400, "Invalid OTP")
+    exp = d.get("otp_expires_at")
+    if exp and datetime.fromisoformat(exp) < datetime.now(timezone.utc):
+        raise HTTPException(400, "OTP expired")
+    await db.bank_accounts.update_one({"_id": ObjectId(bid)},
+        {"$set": {"verified": True, "verified_at": datetime.now(timezone.utc).isoformat(),
+                  "otp": None, "otp_expires_at": None}})
+    return await _serialize_bank(await db.bank_accounts.find_one({"_id": ObjectId(bid)}))
+
+@api.get("/admin/finance/overview")
+async def finance_overview(admin: dict = Depends(require_admin)):
+    now = datetime.now(timezone.utc)
+    day_ago = (now - timedelta(days=1)).isoformat()
+    week_ago = (now - timedelta(days=7)).isoformat()
+    month_ago = (now - timedelta(days=30)).isoformat()
+    paid = {"payment_status":"paid"}
+    async def _sum(q, field):
+        total = 0.0
+        async for d in db.payment_transactions.find(q, {field:1}):
+            total += float(d.get(field) or 0)
+        return round(total, 2)
+    return {
+        "total_revenue": await _sum(paid, "amount"),
+        "subscription_revenue": await _sum({**paid, "kind":"subscription"}, "amount"),
+        "commission_revenue": await _sum({**paid, "kind":{"$in":["event","class"]}}, "commission_amount"),
+        "daily_revenue": await _sum({**paid, "updated_at":{"$gte":day_ago}}, "amount"),
+        "weekly_revenue": await _sum({**paid, "updated_at":{"$gte":week_ago}}, "amount"),
+        "monthly_revenue": await _sum({**paid, "updated_at":{"$gte":month_ago}}, "amount"),
+        "total_transactions": await db.payment_transactions.count_documents(paid),
+        "pending_payouts": await db.payouts.count_documents({"status":"pending"}),
+        "completed_payouts": await db.payouts.count_documents({"status":"completed"}),
+        "currency": CURRENCY.upper(),
+    }
+
+@api.get("/admin/finance/transactions")
+async def finance_transactions(admin: dict = Depends(require_admin),
+    kind: Optional[str] = None, payment_status: Optional[str] = None,
+    q: Optional[str] = None, limit: int = 200):
+    query = {}
+    if kind: query["kind"] = kind
+    if payment_status: query["payment_status"] = payment_status
+    if q: query["$or"] = [{"email":{"$regex":q,"$options":"i"}},{"title":{"$regex":q,"$options":"i"}}]
+    docs = await db.payment_transactions.find(query).sort("created_at",-1).to_list(limit)
+    out = []
+    for t in docs:
+        organizer_name = None
+        if t.get("kind") in ("event","class") and t.get("ref_id"):
+            coll = db.events if t["kind"]=="event" else db.classes
+            try: it = await coll.find_one({"_id": ObjectId(t["ref_id"])}, {"organizer_name":1,"instructor_owner_name":1,"title":1})
+            except Exception: it = None
+            if it: organizer_name = it.get("organizer_name") or it.get("instructor_owner_name")
+        t["organizer_name"] = organizer_name
+        t["user_name"] = (t.get("participant") or {}).get("name") or t.get("email")
+        out.append(serialize(t))
+    return out
+
+@api.get("/admin/finance/transactions.csv")
+async def finance_transactions_csv(admin: dict = Depends(require_admin)):
+    docs = await db.payment_transactions.find().sort("created_at",-1).to_list(5000)
+    buf = io.StringIO(); w = csv.writer(buf)
+    w.writerow(["Transaction ID","Kind","User Email","Amount","Currency","Commission","Net Organizer","Payment Status","Ref ID","Title","Created At","Updated At"])
+    for t in docs:
+        w.writerow([t.get("session_id"), t.get("kind"), t.get("email"),
+                    t.get("amount",0), (t.get("currency") or CURRENCY).upper(),
+                    t.get("commission_amount",0), t.get("net_amount",0),
+                    t.get("payment_status"), t.get("ref_id",""), t.get("title",""),
+                    t.get("created_at",""), t.get("updated_at","")])
+    buf.seek(0)
+    return StreamingResponse(iter([buf.getvalue()]), media_type="text/csv",
+        headers={"Content-Disposition":"attachment; filename=cosmic_transactions.csv"})
+
+@api.get("/admin/finance/payouts")
+async def list_payouts(admin: dict = Depends(require_admin)):
+    pipeline = [
+        {"$match": {"payment_status":"paid", "kind":{"$in":["event","class"]}}},
+        {"$group": {"_id":{"kind":"$kind","ref_id":"$ref_id"},
+                    "gross":{"$sum":"$amount"},"commission":{"$sum":"$commission_amount"},
+                    "net":{"$sum":"$net_amount"},"count":{"$sum":1}}},
+    ]
+    agg = await db.payment_transactions.aggregate(pipeline).to_list(1000)
+    by_org = {}
+    for row in agg:
+        kind = row["_id"]["kind"]; ref_id = row["_id"]["ref_id"]
+        coll = db.events if kind == "event" else db.classes
+        try: item = await coll.find_one({"_id": ObjectId(ref_id)})
+        except Exception: item = None
+        if not item: continue
+        org_id = item.get("organizer_id") or item.get("instructor_id") or "unknown"
+        org_name = item.get("organizer_name") or item.get("instructor_owner_name") or "—"
+        org_email = item.get("organizer_email") or item.get("instructor_owner_email") or ""
+        if org_id not in by_org:
+            by_org[org_id] = {"organizer_id": org_id, "organizer_name": org_name, "organizer_email": org_email,
+                              "gross":0,"commission":0,"net":0,"count":0,"items":[]}
+        agg_o = by_org[org_id]
+        agg_o["gross"] += row["gross"]; agg_o["commission"] += row["commission"]
+        agg_o["net"] += row["net"]; agg_o["count"] += row["count"]
+        agg_o["items"].append({"kind":kind,"ref_id":ref_id,"title":item.get("title"),"net":round(row["net"],2),"count":row["count"]})
+    for org_id, agg_o in by_org.items():
+        paid_out = 0.0
+        async for p in db.payouts.find({"organizer_id": org_id, "status":"completed"}, {"amount":1}):
+            paid_out += float(p.get("amount") or 0)
+        agg_o["paid_out"] = round(paid_out, 2)
+        agg_o["pending_amount"] = round(agg_o["net"] - paid_out, 2)
+        for k in ("gross","commission","net"): agg_o[k] = round(agg_o[k], 2)
+    return list(by_org.values())
+
+@api.post("/admin/finance/payouts")
+async def create_payout(body: PayoutIn, admin: dict = Depends(require_admin)):
+    now = datetime.now(timezone.utc).isoformat()
+    doc = body.model_dump()
+    doc.update({"status":"completed","processed_at": now,"created_at": now,"admin_id": admin["id"], "currency": CURRENCY})
+    r = await db.payouts.insert_one(doc); doc["_id"] = r.inserted_id
+    return serialize(doc)
+
+@api.get("/admin/finance/payouts/history")
+async def payouts_history(admin: dict = Depends(require_admin)):
+    docs = await db.payouts.find().sort("created_at",-1).to_list(500)
+    return [serialize(d) for d in docs]
+
+@api.get("/admin/finance/payouts.csv")
+async def payouts_csv(admin: dict = Depends(require_admin)):
+    docs = await db.payouts.find().sort("created_at",-1).to_list(5000)
+    buf = io.StringIO(); w = csv.writer(buf)
+    w.writerow(["Payout ID","Organizer ID","Amount","Currency","Method","Reference","Status","Processed At","Notes"])
+    for p in docs:
+        w.writerow([str(p.get("_id")), p.get("organizer_id"), p.get("amount"),
+                    (p.get("currency") or CURRENCY).upper(), p.get("method"),
+                    p.get("reference",""), p.get("status"), p.get("processed_at",""), p.get("notes","")])
+    buf.seek(0)
+    return StreamingResponse(iter([buf.getvalue()]), media_type="text/csv",
+        headers={"Content-Disposition":"attachment; filename=cosmic_payouts.csv"})
+
+
 
 @api.get("/")
 async def root(): return {"service": "Cosmic Elemental API", "ok": True,
