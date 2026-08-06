@@ -3,43 +3,2078 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cosmic Elemental</title>
+<title>Cosmic Elemental — A World Built for Artists</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAFA;
+  --bg-panel:#FFFFFF;
+  --bg-panel-2:#F2F2F2;
+  --line:rgba(17,17,17,0.1);
+  --line-soft:rgba(17,17,17,0.06);
+  --line-dark:rgba(17,17,17,1);
+  --paper:#FAFAFA;
+  --paper-dim:#F2F2F2;
+  --ink:#111111;
+  --yellow:#FF5A00;
+  --yellow-deep:#E65100;
+  --accent-light:#FFF3E0;
+  --rose:#E1306C;
+  --teal:#0E7C7B;
+  --purple:#5B4FE0;
+  --text:#111111;
+  --dim:#555555;
+  --dim-2:#888888;
+  --disp:'Oswald',sans-serif;
+  --display:'Oswald',sans-serif;
+  --body:'Manrope',sans-serif;
+  --mono:'Manrope',sans-serif;
+  --r-sm:2px;
+  --r-md:4px;
+  --r-lg:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
 body{
-background:#000;
-color:#fff;
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-font-family:Georgia,serif;
-text-align:center;
+  background:var(--bg);color:var(--text);font-family:var(--body);
+  min-height:100vh;line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;
+  cursor:auto!important;
 }
-.container{width:90%;max-width:1000px}
-.logo{
-width:min(420px,80vw);
-height:auto;
-margin-bottom:30px;
+::selection{background:var(--ink);color:var(--yellow);}
+a{color:inherit;text-decoration:none;}
+button{font-family:var(--body);cursor:pointer;}
+img{max-width:100%;display:block;}
+.container{max-width:1240px;margin:0 auto;padding:0 32px;}
+.italic{font-style:normal;}
+
+/* dark scope — reserved for the ticker strip only per design rules (no dark main sections) */
+.on-dark{--bg-panel:#161514;--bg-panel-2:#211f1c;--text:#F7F3E7;--dim:#B2AC9B;--dim-2:#847E6C;--line:rgba(255,255,255,.14);--line-soft:rgba(255,255,255,.08);background:var(--ink);color:var(--text);}
+.on-yellow{background:var(--accent-light);color:var(--ink);--dim:#8a5a30;--line:rgba(255,90,0,.25);--line-soft:rgba(255,90,0,.14);}
+
+/* ---------- reveal-on-scroll ---------- */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease, transform .5s ease;}
+.stat-row .stat{transition:opacity .12s linear, transform .12s linear;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* ---------- TICKER ---------- */
+.ticker-wrap{background:var(--ink);color:#fff;overflow:hidden;white-space:nowrap;position:relative;z-index:60;}
+.ticker{display:inline-block;padding:16px 0;font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.01em;text-transform:uppercase;animation:scrollTicker 26s linear infinite;}
+.ticker span{margin:0 30px;position:relative;}
+.ticker span::after{content:'◆';color:var(--yellow);font-size:11px;margin-left:30px;position:relative;top:-3px;}
+@keyframes scrollTicker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ---------- NAV ---------- */
+header{position:sticky;top:0;z-index:50;background:rgba(250,250,250,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;max-width:1240px;margin:0 auto;gap:20px;}
+.logo{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.02em;cursor:pointer;display:inline-flex;align-items:center;gap:10px;line-height:1.25;color:var(--ink);text-transform:uppercase;}
+.logo::before{content:'C';width:32px;height:32px;border-radius:var(--r-sm);background:var(--ink);color:var(--yellow);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:16px;}
+.logo .reg{font-weight:700;}
+.logo .italic{font-style:normal;font-family:var(--display);}
+.logo .dot{display:inline;color:var(--dim-2);margin:0 2px;}
+footer .logo{color:var(--ink);}
+.navlinks{display:flex;gap:2px;align-items:center;}
+.navlinks button{background:none;border:none;color:var(--dim);font-family:var(--body);font-size:14.5px;font-weight:600;letter-spacing:0;text-transform:none;padding:10px 15px;border-radius:var(--r-sm);transition:.15s;position:relative;}
+.navlinks button:hover{color:var(--ink);}
+.navlinks button.active{color:var(--ink);}
+.navlinks button.active::after{content:'';position:absolute;left:15px;right:15px;bottom:2px;height:2px;background:var(--yellow);border-radius:2px;}
+.navactions{display:flex;gap:10px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:var(--r-sm);border:2px solid var(--ink);font-family:var(--body);font-weight:700;font-size:14px;letter-spacing:0;text-transform:none;background:none;color:var(--ink);transition:background-color .15s ease, color .15s ease, transform .15s ease;}
+.btn:hover{background:var(--ink);color:var(--paper);}
+.on-dark .btn{border-color:#fff;color:#fff;}
+.on-dark .btn:hover{background:#fff;color:var(--ink);}
+.on-yellow .btn{border-color:var(--ink);}
+.btn-solid{background:var(--yellow);border:2px solid var(--yellow);color:#fff;}
+.btn-solid:hover{background:var(--yellow-deep);border-color:var(--yellow-deep);color:#fff;transform:translateY(-1px);}
+.on-yellow .btn-solid{background:var(--yellow);color:#fff;}
+.btn-outline-rose{border-color:var(--rose);color:var(--rose);}
+.btn-outline-rose:hover{background:var(--rose);border-color:var(--rose);color:#fff;}
+.btn-sm{padding:9px 16px;font-size:12.5px;}
+.cart-btn{position:relative;background:none;border:2px solid var(--line-dark);border-radius:var(--r-sm);width:40px;height:40px;padding:0;font-size:0;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:center;}
+.cart-btn::before{content:'\2661';font-size:16px;}
+.cart-badge{position:absolute;top:-7px;right:-7px;background:var(--yellow);color:#fff;font-size:10px;font-weight:800;border-radius:999px;min-width:17px;height:17px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+.burger{display:none;background:none;border:none;color:var(--ink);font-size:20px;}
+
+/* ---------- PAGES ---------- */
+.page{display:none;}
+.page.active{display:block;animation:fadeIn .35s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ---------- HERO ---------- */
+.hero{padding:0;position:relative;overflow:hidden;background:var(--bg);color:var(--ink);}
+.hero .container{position:relative;z-index:2;padding-top:80px;padding-bottom:56px;}
+.blob{display:none;}
+.hero-eyebrow{font-family:var(--body);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow);margin-bottom:26px;display:flex;align-items:center;gap:10px;font-weight:800;}
+h1.hero-title{font-family:var(--display);font-weight:700;font-size:clamp(42px,7vw,92px);line-height:0.94;letter-spacing:-.02em;max-width:760px;text-transform:uppercase;color:var(--ink);}
+h1.hero-title em{font-style:normal;font-weight:700;font-family:var(--display);color:var(--yellow);text-transform:uppercase;}
+.hero-sub{font-size:17px;color:var(--dim);max-width:430px;margin:28px 0 32px;line-height:1.7;font-weight:500;}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px;}
+.hero-avatars{display:flex;align-items:center;gap:14px;margin-bottom:44px;}
+.hero-avatars .stack{display:flex;}
+.hero-avatars .stack span{width:36px;height:36px;border-radius:var(--r-sm);background:var(--ink);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:12px;font-weight:700;border:2.5px solid var(--bg);margin-left:-10px;}
+.hero-avatars .stack span:first-child{margin-left:0;}
+.hero-avatars p{font-size:13.5px;font-weight:700;color:var(--dim);}
+.hero-search{background:#fff;border:2px solid var(--line-dark);border-radius:var(--r-md);padding:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:40px;}
+.hero-search input,.hero-search select{background:none;border:none;color:var(--ink);font-size:13.5px;font-family:var(--body);padding:11px 16px;flex:1;min-width:120px;}
+.hero-search input::placeholder{color:var(--dim-2);}
+.hero-search input:focus,.hero-search select:focus{outline:none;}
+.hero-search select{color:var(--dim);}
+.hero-search .go{background:var(--yellow);color:#fff;border:none;border-radius:var(--r-sm);padding:12px 26px;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.03em;flex-shrink:0;}
+.hero-icons{display:flex;gap:28px;flex-wrap:wrap;padding-top:8px;}
+.hero-icons .ic{display:flex;flex-direction:column;align-items:center;gap:9px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--dim);}
+.hero-icons .ic .circ{width:52px;height:52px;border-radius:50%;background:#fff;border:2px solid var(--line-dark);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.hero-flex{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:end;}
+.hero-copy{padding-bottom:6px;}
+@media(max-width:900px){.hero-flex{grid-template-columns:1fr;}.hero-copy{padding-bottom:0;}}
+.stat-row{display:flex;flex-wrap:wrap;border-top:2px solid var(--line-dark);}
+.stat{flex:1;min-width:150px;padding:22px 20px 0 0;border-right:1px solid var(--line);}
+.stat:last-child{border-right:none;}
+.stat b{font-family:var(--display);font-weight:700;font-size:32px;display:block;color:var(--ink);}
+.stat span{font-size:11.5px;color:var(--dim);font-family:var(--body);text-transform:uppercase;letter-spacing:.08em;font-weight:700;}
+
+/* ---------- HOW IT WORKS / MODULES (bento) ---------- */
+.how{padding:88px 0;}
+.how .sec-head{margin-bottom:44px;max-width:640px;}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line-dark);border-radius:var(--r-lg);overflow:hidden;}
+.how-step{display:flex;flex-direction:column;gap:18px;padding:34px 30px;border-right:1px solid var(--line-dark);background:#fff;transition:background-color .15s ease;position:relative;cursor:pointer;}
+.how-step:last-child{border-right:none;}
+.how-step:hover{background:var(--accent-light);}
+.how-step .top-row{display:flex;justify-content:space-between;align-items:flex-start;}
+.how-step .num-circ{font-family:var(--display);font-size:13px;font-weight:700;color:var(--dim);letter-spacing:.02em;}
+.how-step .ic-circ{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--bg-panel-2);border:1px solid var(--line-dark);}
+.how-step h4{font-family:var(--display);font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:-.01em;margin-top:4px;}
+.how-step p{font-size:14px;color:var(--dim);line-height:1.65;max-width:240px;}
+.how-arrow{display:none;}
+@media(max-width:900px){.how-grid{grid-template-columns:1fr;}.how-step{border-right:none;border-bottom:1px solid var(--line-dark);}.how-step:last-child{border-bottom:none;}}
+
+/* ---------- FEATURED SECTION ---------- */
+.section-pad{padding:76px 0;}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:32px;}
+.sec-head h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,4vw,44px);text-transform:uppercase;letter-spacing:-.02em;line-height:1.02;}
+.sec-head .see-all{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid var(--ink);padding-bottom:2px;white-space:nowrap;}
+.icon-row{display:flex;gap:30px;flex-wrap:wrap;padding:36px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:60px;justify-content:space-between;}
+.icon-row .ic{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--dim);}
+.icon-row .ic .circ{width:50px;height:50px;border-radius:50%;background:var(--bg-panel-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:19px;}
+
+/* ---------- CHAPTERS (module showcase) ---------- */
+.chapters{padding:20px 0 90px;}
+.chapter{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;padding:58px 0;border-top:1px solid var(--line);}
+.chapter:last-child{border-bottom:1px solid var(--line);}
+.chapter.rev{direction:rtl;}
+.chapter.rev>*{direction:ltr;}
+.chapter-num{font-family:var(--body);font-size:12.5px;color:var(--yellow);letter-spacing:.1em;margin-bottom:16px;display:block;font-weight:800;text-transform:uppercase;}
+.chapter h3{font-family:var(--display);font-weight:700;font-size:clamp(26px,3.4vw,38px);line-height:1.06;margin-bottom:16px;text-transform:uppercase;letter-spacing:-.01em;}
+.chapter h3 em{font-style:normal;color:var(--yellow);font-family:var(--display);text-transform:uppercase;font-weight:700;}
+.chapter p{color:var(--dim);font-size:15px;line-height:1.75;max-width:460px;margin-bottom:20px;}
+.chapter ul{list-style:none;margin-bottom:24px;}
+.chapter li{font-size:13.5px;color:var(--text);padding:9px 0;border-top:1px solid var(--line-soft);display:flex;gap:10px;}
+.chapter li:first-child{border-top:none;}
+.chapter li::before{content:'—';color:var(--yellow);}
+.chapter-link{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13px;letter-spacing:.02em;text-transform:uppercase;border-bottom:2px solid var(--ink);padding-bottom:3px;}
+.chapter-visual{aspect-ratio:4/3;border-radius:var(--r-lg);position:relative;overflow:hidden;border:1px solid var(--line-dark);display:flex;align-items:center;justify-content:center;}
+.chapter-visual .ghost{font-family:var(--display);font-weight:700;font-size:150px;color:rgba(17,17,17,.06);line-height:1;}
+
+/* ---------- TAG / STATUS ---------- */
+.eyebrow-tag{font-family:var(--body);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--body);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:5px 12px;border-radius:var(--r-sm);}
+.badge.pending{background:var(--accent-light);color:#8a4b00;border:1px solid rgba(255,90,0,0.5);}
+.badge.approved{background:rgba(14,124,123,0.1);color:var(--teal);border:1px solid rgba(14,124,123,0.4);}
+.badge.rejected{background:rgba(225,48,108,0.08);color:var(--rose);border:1px solid rgba(225,48,108,0.4);}
+.badge.suspended{background:var(--bg-panel-2);color:var(--dim);border:1px solid var(--line);}
+.badge.contacted{background:var(--accent-light);color:#8a4b00;border:1px solid rgba(255,90,0,0.5);}
+.badge.confirmed{background:rgba(14,124,123,0.1);color:var(--teal);border:1px solid rgba(14,124,123,0.4);}
+.badge.declined{background:rgba(225,48,108,0.08);color:var(--rose);border:1px solid rgba(225,48,108,0.4);}
+
+/* ---------- SECTION HEADERS (page hero) ---------- */
+.page-head{padding:60px 0 46px;}
+.eyebrow{font-family:var(--body);color:var(--yellow);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px;display:block;font-weight:800;}
+.page-title{font-family:var(--display);font-weight:700;font-size:clamp(36px,5.5vw,64px);line-height:0.98;text-transform:uppercase;letter-spacing:-.02em;}
+.page-title em{font-style:normal;font-family:var(--display);color:var(--yellow);text-transform:uppercase;font-weight:700;}
+.page-sub{color:var(--dim);font-size:15px;margin-top:16px;max-width:560px;font-weight:500;}
+
+/* ---------- FILTER / BROWSE LAYOUT ---------- */
+.browse-layout{display:grid;grid-template-columns:250px 1fr;gap:32px;padding:44px 0 100px;align-items:start;}
+.filters{background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);padding:24px;position:sticky;top:88px;}
+.filters h4{font-family:var(--body);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin:20px 0 10px;font-weight:800;}
+.filters h4:first-child{margin-top:0;}
+.filters select,.filters input[type=text]{width:100%;padding:11px 12px;background:var(--bg-panel-2);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--text);font-size:13px;font-family:var(--body);margin-bottom:4px;}
+.filters select:focus,.filters input:focus{outline:none;border-color:var(--yellow);}
+.chip-group{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font-size:12px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--line-dark);color:var(--dim);background:#fff;transition:.15s;font-weight:700;}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--yellow);}
+.filters .clear{margin-top:18px;width:100%;background:none;border:1px solid var(--line-dark);color:var(--dim);border-radius:var(--r-sm);padding:11px;font-size:12px;letter-spacing:.03em;text-transform:uppercase;font-weight:700;}
+.filters .clear:hover{color:var(--text);border-color:var(--ink);}
+.results-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.results-bar .count{font-family:var(--body);font-size:13px;color:var(--dim);letter-spacing:.01em;font-weight:700;}
+
+/* ---------- EVENT / CLASS CARDS ---------- */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px;}
+.plate-card{background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);overflow:hidden;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease;display:flex;flex-direction:column;}
+.plate-card:hover{transform:translate(-3px,-3px);box-shadow:5px 5px 0 var(--ink);}
+.accent-bar{height:130px;position:relative;display:flex;align-items:flex-start;justify-content:space-between;padding:12px;}
+.date-badge{background:var(--ink);color:var(--yellow);border-radius:var(--r-sm);padding:6px 9px;text-align:center;line-height:1.05;}
+.date-badge span{display:block;font-family:var(--body);font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;}
+.date-badge b{display:block;font-family:var(--display);font-size:17px;font-weight:700;}
+.bk-icon{width:30px;height:30px;border-radius:var(--r-sm);background:rgba(255,255,255,.92);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:13px;border:1px solid var(--line-dark);}
+.plate-body{padding:18px 20px 20px;flex:1;display:flex;flex-direction:column;}
+.plate-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.plate-tags span{font-family:var(--body);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 0;}
+.plate-body h3{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.14;margin-bottom:10px;text-transform:uppercase;letter-spacing:-.01em;}
+.plate-meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--dim);margin-bottom:16px;}
+.plate-meta b{color:var(--text);font-weight:700;}
+.plate-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px;}
+.prize-tag{font-family:var(--display);font-size:14px;color:var(--ink);font-weight:700;}
+.view-link{font-size:12px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:4px;text-transform:uppercase;letter-spacing:.02em;}
+.promo-flag{font-family:var(--body);font-size:10px;font-weight:800;color:#8a4b00;letter-spacing:.05em;}
+
+/* ---------- DETAIL PAGES ---------- */
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--dim);font-size:13px;font-weight:700;margin:26px 0 8px;text-transform:uppercase;letter-spacing:.02em;}
+.back-btn:hover{color:var(--ink);}
+.detail-hero{border-radius:var(--r-lg);padding:46px 44px;margin-bottom:30px;position:relative;overflow:hidden;background:#fff;border:1px solid var(--line-dark);}
+.detail-hero .top-accent{display:none;}
+.detail-hero .tags{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+.detail-hero h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,4.6vw,50px);line-height:1.0;max-width:820px;text-transform:uppercase;letter-spacing:-.01em;}
+.detail-hero .loc{font-family:var(--body);font-size:13px;margin-top:16px;color:var(--dim);letter-spacing:.01em;font-weight:700;}
+.detail-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:30px;padding-bottom:100px;}
+.card{background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);padding:26px;margin-bottom:20px;}
+.card h4{font-family:var(--body);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);margin-bottom:18px;font-weight:800;}
+.card p{color:var(--dim);font-size:14.5px;line-height:1.8;}
+.meta-list{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.meta-item span{display:block;font-family:var(--body);font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;font-weight:700;}
+.meta-item b{font-size:16px;font-weight:700;}
+.meta-item.prize b{color:var(--ink);font-family:var(--display);font-size:23px;font-weight:700;}
+.people-row{display:flex;flex-wrap:wrap;gap:10px;}
+.people-chip{display:flex;align-items:center;gap:9px;background:var(--bg-panel-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 16px 6px 6px;font-size:13px;font-weight:600;}
+.avatar{width:26px;height:26px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.timeline{border-left:2px solid var(--line-dark);padding-left:22px;}
+.tl-item{position:relative;padding-bottom:22px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item::before{content:'';position:absolute;left:-27px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink);}
+.tl-time{font-family:var(--display);font-size:12px;color:var(--ink);font-weight:700;}
+.tl-item b{display:block;font-size:14.5px;margin-top:3px;font-weight:700;}
+.sponsor-row{display:flex;flex-wrap:wrap;gap:8px;}
+.sponsor-chip{background:var(--bg-panel-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:8px 15px;font-size:12px;font-weight:700;color:var(--dim);letter-spacing:.01em;}
+.rules-list{list-style:none;}
+.rules-list li{font-size:13.5px;color:var(--dim);padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;}
+.rules-list li::before{content:'—';color:var(--yellow);}
+.rules-list li:last-child{border-bottom:none;}
+.reg-form label{display:block;font-family:var(--body);font-size:11px;text-transform:uppercase;color:var(--dim);letter-spacing:.03em;margin:15px 0 6px;font-weight:700;}
+.reg-form label:first-child{margin-top:0;}
+.reg-form input,.reg-form select,.reg-form textarea{width:100%;padding:12px 14px;background:var(--bg-panel-2);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--text);font-size:13.5px;font-family:var(--body);}
+.reg-form input:focus,.reg-form select:focus,.reg-form textarea:focus{outline:none;border-color:var(--yellow);}
+.reg-form button{width:100%;margin-top:22px;justify-content:center;}
+.fee-badge{display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:#fff;border-radius:var(--r-sm);padding:15px 16px;margin-bottom:18px;}
+.fee-badge span{font-family:var(--body);font-size:12px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.02em;font-weight:700;}
+.fee-badge b{font-family:var(--display);font-size:20px;color:var(--yellow);font-weight:700;}
+.org-card{display:flex;gap:15px;align-items:flex-start;}
+.org-card .avatar{width:44px;height:44px;font-size:15px;flex-shrink:0;}
+.org-card b{display:block;font-size:14.5px;font-weight:700;}
+.org-card span{font-size:12.5px;color:var(--dim);}
+.confirm-banner{background:var(--ink);color:var(--yellow);padding:15px 18px;border-radius:var(--r-sm);font-weight:700;font-size:13.5px;margin-top:16px;display:none;}
+.confirm-banner.show{display:block;animation:fadeIn .3s ease;}
+
+/* ---------- TICKET INFO (event detail sidebar) ---------- */
+.ticket-card{background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);padding:24px;margin-bottom:20px;}
+.ticket-card h4{font-family:var(--body);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);margin-bottom:16px;font-weight:800;}
+.ticket-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);}
+.ticket-row:last-of-type{border-bottom:none;}
+.ticket-row .tn{font-size:13.5px;font-weight:700;}
+.ticket-row .tp{font-family:var(--display);font-size:16px;color:var(--ink);font-weight:700;}
+
+/* ---------- DIRECTORY / PORTRAIT PLATES ---------- */
+.dir-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:20px;background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);padding:12px 12px 12px 22px;}
+.dir-toolbar select{background:var(--bg-panel-2);border:1px solid var(--line);color:var(--text);border-radius:var(--r-sm);padding:9px 14px;font-size:12.5px;font-family:var(--body);}
+.dir-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.info-strip{background:var(--ink);color:#fff;border-radius:var(--r-md);padding:18px 24px;margin-bottom:24px;font-size:13.5px;line-height:1.6;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.info-strip b{font-weight:800;color:var(--yellow);}
+.art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:22px;padding-bottom:100px;}
+.art-card{background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);overflow:hidden;transition:transform .18s ease, box-shadow .18s ease;}
+.art-card:hover{transform:translate(-3px,-3px);box-shadow:5px 5px 0 var(--ink);}
+.art-plate{aspect-ratio:4/5;background:linear-gradient(155deg,#2a2a2a,#111111);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;overflow:hidden;}
+.art-plate .ghost-init{font-family:var(--display);font-weight:700;font-size:74px;color:rgba(255,255,255,.14);}
+.art-plate .verified{position:absolute;top:12px;right:12px;background:var(--yellow);color:#fff;font-size:10px;font-weight:800;padding:4px 9px;border-radius:var(--r-sm);font-family:var(--body);letter-spacing:.03em;}
+.art-plate .bk-icon{position:absolute;top:12px;left:12px;}
+.art-plate .corner-tag{position:absolute;bottom:12px;left:12px;font-family:var(--body);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.94);color:var(--ink);padding:4px 9px;border-radius:var(--r-sm);}
+.art-info{padding:17px 17px 19px;}
+.art-info h4{font-family:var(--display);font-weight:700;font-size:17px;cursor:pointer;text-transform:uppercase;}
+.art-info .city{font-size:12px;color:var(--dim);font-family:var(--body);margin:5px 0 11px;letter-spacing:.01em;font-weight:600;}
+.art-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:15px;}
+.art-tags span{font-size:10.5px;background:var(--bg-panel-2);border:1px solid var(--line);color:var(--dim);padding:3px 9px;border-radius:var(--r-sm);font-weight:600;}
+.art-actions{display:flex;gap:8px;}
+.art-actions button{flex:1;font-size:11.5px;padding:9px;border-radius:var(--r-sm);letter-spacing:.02em;text-transform:uppercase;font-weight:700;}
+.select-btn{background:none;border:1px solid var(--line-dark);color:var(--text);}
+.select-btn:hover{border-color:var(--ink);}
+.select-btn.added{background:var(--yellow);border-color:var(--yellow);color:#fff;}
+.view-btn{background:var(--ink);color:var(--yellow);border:none;font-weight:700;}
+
+/* ---------- ARTIST PROFILE ---------- */
+.profile-hero{border-radius:var(--r-lg);padding:44px;display:flex;gap:32px;align-items:center;margin-bottom:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line-dark);color:var(--ink);justify-content:space-between;}
+.profile-avatar{width:104px;height:104px;border-radius:var(--r-md);background:var(--ink);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:32px;font-weight:700;flex-shrink:0;border:1px solid var(--line-dark);}
+.profile-hero h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,4vw,40px);text-transform:uppercase;letter-spacing:-.01em;}
+.profile-hero .sub{font-family:var(--body);color:var(--dim);font-size:13px;margin-top:9px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;}
+.profile-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin-bottom:34px;background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);padding:22px 10px;}
+.profile-stats .ps{text-align:center;}
+.profile-stats .ps b{display:block;font-family:var(--display);font-size:27px;font-weight:700;}
+.profile-stats .ps span{font-size:10.5px;color:var(--dim);font-family:var(--body);text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+.port-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+.port-tile{height:120px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-family:var(--body);font-size:11px;color:var(--dim-2);background:var(--bg-panel-2);border:1px solid var(--line);letter-spacing:.02em;font-weight:700;}
+.ach-list{list-style:none;}
+.ach-list li{font-size:13.5px;color:var(--dim);padding:9px 0;border-bottom:1px solid var(--line);}
+.ach-list li:last-child{border-bottom:none;}
+.social-row{display:flex;gap:10px;flex-wrap:wrap;}
+.social-row a{border:1px solid var(--line-dark);border-radius:var(--r-sm);padding:8px 16px;font-size:12.5px;font-weight:700;}
+.social-row a:hover{border-color:var(--yellow);color:var(--yellow);}
+
+/* ---------- BOOKING / DASHBOARDS ---------- */
+.dash-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;padding:40px 0 28px;border-bottom:1px solid var(--line-dark);margin-bottom:30px;}
+.dash-head h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,4vw,38px);text-transform:uppercase;letter-spacing:-.01em;}
+.dash-head .sub{color:var(--dim);font-size:14px;margin-top:8px;}
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:34px;}
+.dash-stat{background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);padding:19px;}
+.dash-stat b{font-family:var(--display);font-weight:700;font-size:26px;display:block;color:var(--ink);}
+.dash-stat span{font-size:11px;color:var(--dim);font-family:var(--body);text-transform:uppercase;letter-spacing:.04em;font-weight:700;}
+.dash-section{margin-bottom:36px;}
+.dash-section h4{font-family:var(--body);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);margin-bottom:18px;font-weight:800;}
+.item-row{background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);padding:19px 22px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.item-row .info b{display:block;font-size:16px;font-family:var(--display);font-weight:700;text-transform:uppercase;}
+.item-row .info span{font-size:12px;color:var(--dim);font-family:var(--body);letter-spacing:0;}
+.item-row .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.item-row .actions button{font-size:12px;padding:8px 15px;border-radius:var(--r-sm);letter-spacing:.02em;text-transform:uppercase;}
+.btn-approve{background:var(--teal);border:none;color:#fff;font-weight:700;}
+.btn-reject{background:none;border:1px solid var(--rose);color:var(--rose);font-weight:700;}
+.btn-edit{background:none;border:1px solid var(--line-dark);color:var(--text);}
+.btn-suspend{background:none;border:1px solid var(--dim-2);color:var(--dim);}
+.btn-neutral{background:none;border:1px solid var(--ink);color:var(--ink);font-weight:700;}
+.empty-state{color:var(--dim);font-size:13.5px;padding:30px;text-align:center;border:1px dashed var(--line-dark);border-radius:var(--r-md);}
+
+/* ---------- TABS / TABLES ---------- */
+.tabbar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:28px;border-bottom:2px solid var(--line-dark);}
+.tabbar button{background:none;border:none;color:var(--dim);font-size:13px;font-weight:700;padding:13px 16px;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.02em;margin-bottom:-2px;}
+.tabbar button.active{color:var(--ink);border-bottom-color:var(--yellow);}
+.tabpanel{display:none;}
+.tabpanel.active{display:block;animation:fadeIn .3s ease;}
+.data-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);overflow:hidden;}
+.data-table th{text-align:left;font-family:var(--body);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);padding:14px 16px;border-bottom:1px solid var(--line-dark);background:var(--bg-panel-2);font-weight:700;}
+.data-table td{padding:14px 16px;border-bottom:1px solid var(--line);font-size:13px;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table .actions{display:flex;gap:6px;flex-wrap:wrap;}
+.data-table .actions button{font-size:11px;padding:6px 11px;border-radius:var(--r-sm);text-transform:uppercase;}
+
+/* ---------- DYNAMIC FORM ROWS ---------- */
+.dyn-row{display:flex;gap:8px;margin-bottom:8px;align-items:center;}
+.dyn-row input{flex:1;}
+.dyn-row .rm-row{background:none;border:1px solid var(--line-dark);color:var(--dim);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;}
+.add-row-btn{background:none;border:1px dashed var(--line-dark);color:var(--dim);border-radius:var(--r-sm);padding:11px;width:100%;font-size:12px;margin-top:4px;text-transform:uppercase;letter-spacing:.03em;font-weight:700;}
+.add-row-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+.pkg-card{background:var(--bg-panel-2);border:1px solid var(--line-dark);border-radius:var(--r-md);padding:18px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.pkg-card b{font-family:var(--display);font-size:15px;font-weight:700;display:block;text-transform:uppercase;}
+.pkg-card span{font-size:11.5px;color:var(--dim);font-family:var(--body);}
+.pkg-card .price{color:var(--ink);font-weight:800;font-family:var(--body);}
+.auth-wrap{max-width:520px;margin:0 auto;padding:56px 0 110px;}
+.auth-wrap .card{padding:36px;}
+.auth-wrap h1{text-align:center;font-size:30px;margin-bottom:26px;}
+.role-note{background:var(--bg-panel-2);border:1px solid var(--line-dark);border-radius:var(--r-md);padding:15px 16px;font-size:12.5px;color:var(--dim);margin-bottom:24px;line-height:1.6;}
+
+footer{padding:64px 0 30px;margin-top:20px;border-top:1px solid var(--line-dark);}
+.foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;}
+.foot-grid .logo{margin-bottom:14px;}
+.foot-grid p{color:var(--dim);font-size:13px;max-width:320px;line-height:1.7;}
+.foot-cols{display:flex;gap:60px;flex-wrap:wrap;}
+.foot-col h5{font-family:var(--body);font-size:11px;text-transform:uppercase;color:var(--dim);letter-spacing:.08em;margin-bottom:15px;font-weight:700;}
+.foot-col a{display:block;font-size:13.5px;color:var(--text);margin-bottom:11px;}
+.foot-col a:hover{color:var(--yellow);}
+.foot-bottom{margin-top:42px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--dim);font-family:var(--body);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;letter-spacing:0;font-weight:600;}
+
+/* ---------- PORTAL DROPDOWN ---------- */
+.portal-btn{background:var(--yellow);border:2px solid var(--yellow);border-radius:var(--r-sm);padding:11px 20px;font-size:13px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;}
+.portal-btn:hover{background:var(--yellow-deep);border-color:var(--yellow-deep);}
+.portal-menu{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid var(--line-dark);border-radius:var(--r-md);padding:8px;min-width:220px;display:none;z-index:70;box-shadow:6px 6px 0 rgba(17,17,17,.9);}
+.portal-menu.open{display:block;}
+.portal-menu button{display:flex;flex-direction:column;align-items:flex-start;width:100%;background:none;border:none;color:var(--ink);padding:12px 13px;border-radius:var(--r-sm);font-size:13px;font-weight:700;text-align:left;text-transform:none;letter-spacing:0;}
+.portal-menu button:hover{background:var(--bg-panel-2);}
+.portal-menu button span{font-weight:400;font-size:11.5px;color:var(--dim);margin-top:2px;}
+.portal-menu hr{border:none;border-top:1px solid var(--line);margin:6px 4px;}
+.session-chip{display:flex;align-items:center;gap:8px;background:none;border:2px solid var(--line-dark);border-radius:var(--r-sm);padding:5px 8px 5px 14px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--ink);}
+
+/* ---------- DRAWER ---------- */
+.drawer-overlay{position:fixed;inset:0;background:rgba(17,17,17,0.5);z-index:90;display:none;}
+.drawer-overlay.open{display:block;}
+.drawer{position:fixed;top:0;right:0;height:100%;width:390px;max-width:92vw;background:#fff;border-left:1px solid var(--line-dark);z-index:91;transform:translateX(100%);transition:.3s ease;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.drawer-head{padding:24px;border-bottom:1px solid var(--line-dark);display:flex;justify-content:space-between;align-items:center;}
+.drawer-head h3{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;}
+.drawer-close{background:none;border:none;color:var(--text);font-size:20px;}
+.drawer-body{padding:24px;overflow-y:auto;flex:1;}
+.drawer-foot{padding:24px;border-top:1px solid var(--line-dark);}
+.drawer-foot .btn{width:100%;justify-content:center;}
+.shortlist-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);}
+.shortlist-item .avatar{width:34px;height:34px;font-size:12px;}
+.shortlist-item b{flex:1;font-size:13.5px;font-weight:700;}
+.shortlist-item .rm{color:var(--dim);font-size:16px;background:none;border:none;}
+.shortlist-item .rm:hover{color:var(--rose);}
+.empty-note{color:var(--dim);font-size:13.5px;padding:16px 0;}
+
+/* ---------- MOVEMENT CTA ---------- */
+.movement{border-radius:var(--r-lg);overflow:hidden;position:relative;background:#fff;color:var(--ink);padding:64px 44px;margin-bottom:80px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:30px;border:1px solid var(--line-dark);}
+.movement::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%, var(--accent-light), transparent 60%);pointer-events:none;}
+.movement .mv-copy{position:relative;z-index:1;max-width:560px;}
+.movement h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.2vw,44px);line-height:1.02;text-transform:uppercase;margin-bottom:16px;letter-spacing:-.01em;}
+.movement h2 em{font-style:normal;color:var(--yellow);font-family:var(--display);text-transform:uppercase;font-weight:700;}
+.movement p{color:var(--dim);font-size:15px;line-height:1.7;margin-bottom:26px;max-width:460px;}
+.mv-play{position:relative;z-index:1;width:120px;height:120px;border-radius:50%;background:var(--bg-panel-2);border:2px solid var(--line-dark);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;color:var(--ink);}
+
+/* disable decorative dark-cinematic bits so the flat editorial look stays clean */
+#motionBg,#grainCanvas,.sparkle-field,.bg-marquee,.cursor-dot,.cursor-ring{display:none!important;}
+body,a,button,.plate-card,.art-card,input,select,textarea{cursor:auto!important;}
+.shimmer-text{background:none;-webkit-text-fill-color:currentColor;color:var(--yellow);animation:none;font-style:normal;font-weight:700;font-family:var(--display);text-transform:uppercase;}
+
+@media(max-width:900px){
+  .navlinks{display:none;}
+  .burger{display:block;}
+  .chapter{grid-template-columns:1fr;gap:30px;}
+  .chapter.rev{direction:ltr;}
+  .browse-layout{grid-template-columns:1fr;}
+  .filters{position:static;}
+  .detail-grid{grid-template-columns:1fr;}
+  .form-grid-2{grid-template-columns:1fr;}
+  .data-table{display:block;overflow-x:auto;}
+  .meta-list{grid-template-columns:1fr 1fr;}
+  .movement{padding:40px 26px;}
 }
-.coming{
-margin-top:20px;
-letter-spacing:6px;
-font-size:.9rem;
-opacity:.9;
+@media(max-width:560px){
+  .hero-icons{gap:18px;justify-content:space-between;}
+  .hero-icons .ic{flex:1 1 22%;}
 }
-.social{
-margin-top:25px;
-font-size:1.1rem;
-}
-.social a{color:#fff;text-decoration:none}
+
 </style>
 </head>
 <body>
-<div class="container">
-    <img class="logo" src="CE OG WHITE 1.png" alt="Cosmic Elemental Logo">
-    <div class="coming">COMING SOON</div>
-    <div class="social"><a href="https://instagram.com/cosmicelemental">@cosmicelemental</a></div>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden;">
+  <filter id="liquidDistort" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.015 0.04" numOctaves="2" seed="2" result="noise"/>
+    <feDisplacementMap id="dispMap" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<canvas id="motionBg"></canvas>
+<canvas id="grainCanvas"></canvas>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="ticker-wrap"><div class="ticker" id="tickerTrack"></div></div>
+
+<header>
+  <nav>
+    <div class="logo" data-nav="home"><span class="reg">Cosmic</span><span class="dot">·</span><span class="italic">Elemental</span></div>
+    <div class="navlinks" id="navlinks">
+      <button data-nav="home">Home</button>
+      <button data-nav="events">Events</button>
+      <button data-nav="classes">Classes</button>
+      <button data-nav="directory">Directory</button>
+    </div>
+    <div class="navactions">
+      <button class="cart-btn" id="cartBtn">Saved<span class="cart-badge" id="cartBadge">0</span></button>
+      <div id="portalArea" style="position:relative;"></div>
+      <button class="burger" id="burgerBtn">☰</button>
+    </div>
+  </nav>
+</header>
+
+<!-- ================= HOME ================= -->
+<section class="page active" id="page-home">
+  <div class="hero">
+    <div class="container">
+      <span class="hero-eyebrow reveal">Phase 01 · Global Creative Ecosystem</span>
+      <div class="hero-flex">
+        <h1 class="hero-title reveal">A world built for <em class="shimmer-text">artists.</em></h1>
+        <div class="hero-copy reveal">
+          <p class="hero-sub" style="margin:0 0 28px;">One organized platform to discover events, teach &amp; learn, and hire creative talent. No more scrolling through fragmented feeds.</p>
+          <div class="hero-ctas" style="margin-bottom:0;">
+            <button class="btn btn-solid" data-nav="events">Explore events ↗</button>
+            <button class="btn" data-nav="directory">Browse talent</button>
+          </div>
+        </div>
+      </div>
+      <div class="stat-row reveal" style="margin-top:56px;">
+        <div class="stat"><b>1,200+</b><span>Events Listed</span></div>
+        <div class="stat"><b>180+</b><span>Classes &amp; Workshops</span></div>
+        <div class="stat"><b>6,400+</b><span>Verified Artists</span></div>
+        <div class="stat"><b>40+</b><span>Countries</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="section-pad" style="padding-bottom:0;">
+      <div class="sec-head reveal">
+        <h2>Featured <em class="shimmer-text" style="text-transform:none;">Events</em></h2>
+        <span class="see-all" data-nav="events">View All Events →</span>
+      </div>
+      <div class="card-grid reveal" id="homeFeatured"></div>
+    </div>
+
+    <div class="how reveal">
+      <span class="eyebrow" style="margin-bottom:10px;">Three Modules · One Platform</span>
+      <div class="sec-head" style="margin-bottom:36px;"><h2>Every discipline,<br>one home.</h2></div>
+      <div class="how-grid">
+        <div class="how-step" data-nav="events"><div class="top-row"><span class="num-circ">01</span><span class="ic-circ">🧭</span></div><h4>Events</h4><p>Battles, jams, festivals and showcases — discover and register in one place.</p></div>
+        <div class="how-step" data-nav="classes"><div class="top-row"><span class="num-circ">02</span><span class="ic-circ">🎓</span></div><h4>Classes</h4><p>Structured training from verified instructors and studios worldwide.</p></div>
+        <div class="how-step" data-nav="directory"><div class="top-row"><span class="num-circ">03</span><span class="ic-circ">👥</span></div><h4>Talent</h4><p>Book dancers, DJs, MCs and creators through a human-reviewed pipeline.</p></div>
+      </div>
+    </div>
+
+    <div class="chapters">
+      <div class="chapter reveal">
+        <div>
+          <span class="chapter-num">01 — Discover</span>
+          <h3>Every underground event, <em>finally in one place.</em></h3>
+          <p>Organizers publish battles, jams, festivals, showcases, competitions, sessions and cyphers with full details — judges, prize money, schedule, sponsors. No more relying on an algorithm to surface the one flyer that mattered.</p>
+          <ul>
+            <li>Filter by country, city, art form, event type or skill level</li>
+            <li>Every event page is a full professional profile</li>
+            <li>Register directly, track deadlines, never miss a date</li>
+          </ul>
+          <span class="chapter-link" data-nav="events">Explore Events →</span>
+        </div>
+        <div class="chapter-visual" style="background:linear-gradient(160deg,#fff3b0,#ffe066);"><span class="ghost">01</span></div>
+      </div>
+
+      <div class="chapter rev reveal">
+        <div>
+          <span class="chapter-num">02 — Learn</span>
+          <h3>A dedicated home for <em>classes &amp; workshops.</em></h3>
+          <p>Studios, academies, music schools and independent educators list structured learning separately from competitions — so anyone who wants to learn an art form can find verified teachers without wading through battle listings.</p>
+          <ul>
+            <li>Filter by art form, city, instructor, skill level, price or format</li>
+            <li>Online and offline batches, clearly labelled</li>
+            <li>See seats available, fees and schedule before you commit</li>
+          </ul>
+          <span class="chapter-link" data-nav="classes">Explore Classes →</span>
+        </div>
+        <div class="chapter-visual" style="background:linear-gradient(160deg,#d7f5ee,#a9e7db);"><span class="ghost">02</span></div>
+      </div>
+
+      <div class="chapter reveal">
+        <div>
+          <span class="chapter-num">03 — Hire</span>
+          <h3>A directory that doubles as a <em>talent agency.</em></h3>
+          <p>Dancers, DJs, MCs, graffiti writers, DOPs, editors and more — every artist gets a portfolio worth showing off. Brands and organizers submit a booking request, and our team facilitates the match, the terms, and the trust.</p>
+          <ul>
+            <li>Full portfolios: photos, video, achievements, specialization</li>
+            <li>"Book This Artist" opens a human-reviewed request, not an instant charge</li>
+            <li>Quality control on both sides of every booking</li>
+          </ul>
+          <span class="chapter-link" data-nav="directory">Meet the Artists →</span>
+        </div>
+        <div class="chapter-visual" style="background:linear-gradient(160deg,#f6ecd8,#f0e2c4);"><span class="ghost">03</span></div>
+      </div>
+    </div>
+
+    <div class="movement reveal">
+      <div class="mv-copy">
+        <h2>We are more than a platform, we are a <em>movement.</em></h2>
+        <p>Cosmic Elemental is a global community building a better future for artists.</p>
+        <button class="btn btn-solid" data-nav="artist-auth" style="border-color:var(--yellow);">Join the Movement</button>
+      </div>
+      <div class="mv-play">▶</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EVENTS ================= -->
+<section class="page" id="page-events">
+  <div class="on-yellow"><div class="container">
+    <div class="page-head">
+      <span class="eyebrow">Module 01 — Discovery</span>
+      <h1 class="page-title">Global Event <em class="shimmer-text">Discovery.</em></h1>
+      <p class="page-sub">Battles, jams, festivals, showcases, competitions, sessions and cyphers — filtered your way.</p>
+    </div>
+  </div></div>
+  <div class="container">
+    <div class="browse-layout">
+      <aside class="filters">
+        <h4>Search</h4>
+        <input type="text" id="evSearch" placeholder="Search events, cities...">
+        <h4>Art Form</h4>
+        <div class="chip-group" id="fCategory"></div>
+        <h4>Event Type</h4>
+        <div class="chip-group" id="fType"></div>
+        <h4>Country</h4>
+        <select id="fCountry"><option value="">All Countries</option></select>
+        <h4>Skill Level</h4>
+        <select id="fSkill"><option value="">All Levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced / Pro</option></select>
+        <button class="clear" id="clearFilters">Clear all filters</button>
+      </aside>
+      <div>
+        <div class="results-bar"><span class="count" id="evCount"></span></div>
+        <div class="card-grid" id="evGrid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EVENT DETAIL ================= -->
+<section class="page" id="page-event-detail">
+  <div class="container">
+    <span class="back-btn" data-nav="events">← Back to all events</span>
+    <div id="eventDetailBody"></div>
+  </div>
+</section>
+
+<!-- ================= CLASSES ================= -->
+<section class="page" id="page-classes">
+  <div class="on-yellow"><div class="container">
+    <div class="page-head">
+      <span class="eyebrow">Module 02 — Learning</span>
+      <h1 class="page-title">Classes &amp; <em class="shimmer-text">Workshops.</em></h1>
+      <p class="page-sub">Structured learning, kept separate from competitions — find verified teachers and training programs.</p>
+    </div>
+  </div></div>
+  <div class="container">
+    <div class="browse-layout">
+      <aside class="filters">
+        <h4>Search</h4>
+        <input type="text" id="clSearch" placeholder="Search classes, instructors...">
+        <h4>Art Form</h4>
+        <div class="chip-group" id="clArtForm"></div>
+        <h4>Format</h4>
+        <div class="chip-group" id="clMode"></div>
+        <h4>Skill Level</h4>
+        <select id="clSkill"><option value="">All Levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced / Pro</option></select>
+        <h4>City</h4>
+        <select id="clCity"><option value="">All Cities</option></select>
+        <button class="clear" id="clClearFilters">Clear all filters</button>
+      </aside>
+      <div>
+        <div class="results-bar"><span class="count" id="clCount"></span></div>
+        <div class="card-grid" id="clGrid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CLASS DETAIL ================= -->
+<section class="page" id="page-class-detail">
+  <div class="container">
+    <span class="back-btn" data-nav="classes">← Back to all classes</span>
+    <div id="classDetailBody"></div>
+  </div>
+</section>
+
+<!-- ================= DIRECTORY ================= -->
+<section class="page" id="page-directory">
+  <div class="on-yellow"><div class="container">
+    <div class="page-head">
+      <span class="eyebrow">Module 03 — Talent Agency</span>
+      <h1 class="page-title">Artist <em class="shimmer-text">Directory.</em></h1>
+      <p class="page-sub">Every profile is a portfolio. Every booking is human-reviewed — our team confirms availability and terms before anything is final.</p>
+    </div>
+  </div></div>
+  <div class="container">
+    <div class="info-strip">
+      <span><b>How booking works:</b> click "Book This Artist," submit your project details, and our team reaches out to confirm fit, availability and pricing — no instant charges.</span>
+    </div>
+    <div class="dir-toolbar">
+      <div class="dir-chips" id="disciplineChips"></div>
+      <select id="sortSelect">
+        <option value="az">Alphabetical (A–Z)</option>
+        <option value="za">Alphabetical (Z–A)</option>
+        <option value="events">Most Events Played</option>
+        <option value="exp">Most Experienced</option>
+      </select>
+    </div>
+    <div class="results-bar"><span class="count" id="artCount"></span></div>
+    <div class="art-grid" id="artGrid"></div>
+  </div>
+</section>
+
+<!-- ================= ARTIST PROFILE ================= -->
+<section class="page" id="page-artist-profile">
+  <div class="container">
+    <span class="back-btn" data-nav="directory">← Back to directory</span>
+    <div id="artistProfileBody"></div>
+  </div>
+</section>
+
+<!-- ================= BOOK ARTIST ================= -->
+<section class="page" id="page-book-artist">
+  <div class="container">
+    <span class="back-btn" data-nav="directory">← Back to directory</span>
+    <div class="page-head">
+      <span class="eyebrow">Talent Agency</span>
+      <h1 class="page-title">Book <em id="bookArtistName" class="shimmer-text">This Artist</em></h1>
+      <p class="page-sub">This submits a request to our team — not an instant booking. We'll confirm availability, pricing and details with both sides.</p>
+    </div>
+    <div class="card" style="max-width:640px;">
+      <form class="reg-form" id="bookForm">
+        <label>Company / Brand name</label><input type="text" id="bk_company" required>
+        <label>Contact person</label><input type="text" id="bk_contact" required>
+        <div class="form-grid-2">
+          <div><label>Email</label><input type="email" id="bk_email" required></div>
+          <div><label>Phone number</label><input type="tel" id="bk_phone"></div>
+        </div>
+        <label>Event / Project name</label><input type="text" id="bk_project">
+        <div class="form-grid-2">
+          <div><label>City</label><input type="text" id="bk_city"></div>
+          <div><label>Date</label><input type="text" id="bk_date" placeholder="e.g. Sept 2026"></div>
+        </div>
+        <label>Budget (optional)</label><input type="text" id="bk_budget" placeholder="e.g. ₹50,000">
+        <label>Requirements</label><textarea id="bk_requirements" rows="4" placeholder="Tell us what you need this artist for..."></textarea>
+        <button type="submit" class="btn btn-solid">Submit Booking Request</button>
+        <div class="confirm-banner" id="bookConfirm">✓ Request received — our team will reach out within 2 business days to confirm availability and next steps.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ORGANIZER AUTH ================= -->
+<section class="page" id="page-organizer-auth">
+  <div class="container"><div class="auth-wrap">
+    <span class="eyebrow" style="display:block;text-align:center;margin-bottom:8px;">Organizer Portal</span>
+    <h1 class="page-title">Register &amp; List Events</h1>
+    <div class="card">
+      <div class="role-note">New events go live only after admin review — usually within 24–48 hours. Track status anytime from your dashboard.</div>
+      <form class="reg-form" id="organizerRegForm">
+        <label>Organization / Organizer name</label><input type="text" id="orgName" required>
+        <label>Contact email</label><input type="email" id="orgEmail" required>
+        <label>Phone</label><input type="tel" id="orgPhone">
+        <label>City / Country</label><input type="text" id="orgCity" placeholder="Mumbai, India">
+        <button type="submit" class="btn btn-solid">Create Organizer Account</button>
+      </form>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ORGANIZER DASHBOARD ================= -->
+<section class="page" id="page-organizer-dashboard">
+  <div class="container">
+    <div class="dash-head">
+      <div><h2 id="orgDashName">Organizer Dashboard</h2><div class="sub">Manage your events and sponsor collaborations.</div></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-solid" onclick="openEventForm(null)">+ Create New Event</button>
+        <button class="btn" onclick="logoutSession()">Log out</button>
+      </div>
+    </div>
+    <div class="dash-stats" id="orgStats"></div>
+    <div class="dash-section"><h4>My Events</h4><div id="orgEventsList"></div></div>
+    <div class="dash-section">
+      <h4>Sponsor Collaboration — Paid Promotion</h4>
+      <p style="color:var(--dim);font-size:13.5px;margin-bottom:16px;">Boost an approved event's visibility. Requests are reviewed by admin before going live.</p>
+      <div id="pkgList"></div>
+      <div class="card" style="margin-top:8px;">
+        <label style="display:block;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">Request a promotion package</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <select id="promoEventSelect" style="flex:1;min-width:180px;padding:11px 12px;background:var(--bg-panel-2);border:1px solid var(--line);border-radius:3px;color:var(--text);"></select>
+          <select id="promoPackageSelect" style="flex:1;min-width:180px;padding:11px 12px;background:var(--bg-panel-2);border:1px solid var(--line);border-radius:3px;color:var(--text);"></select>
+          <button class="btn btn-solid" onclick="requestPromotion()">Request Promotion</button>
+        </div>
+      </div>
+      <div class="dash-section" style="margin-top:22px;"><h4>My Promotion Requests</h4><div id="orgPromoList"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ORGANIZER EVENT FORM ================= -->
+<section class="page" id="page-organizer-event-form">
+  <div class="container">
+    <span class="back-btn" onclick="goTo('organizer-dashboard')">← Back to dashboard</span>
+    <div class="page-head"><span class="eyebrow">Organizer Portal</span><h1 class="page-title" id="eventFormTitle">Create Event</h1></div>
+    <div class="card" style="max-width:840px;">
+      <form class="reg-form" id="eventForm">
+        <div class="form-grid-2">
+          <div><label>Event title</label><input type="text" id="ef_title" required></div>
+          <div><label>Event type</label><select id="ef_type"></select></div>
+        </div>
+        <label>Event description</label><textarea id="ef_desc" rows="3" required></textarea>
+        <div class="form-grid-2">
+          <div><label>Art form</label><select id="ef_category"></select></div>
+          <div><label>Skill level</label><select id="ef_skill"><option>All Levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced / Pro</option></select></div>
+        </div>
+        <div class="form-grid-2">
+          <div><label>Date</label><input type="text" id="ef_date" placeholder="e.g. Oct 12, 2026" required></div>
+          <div><label>Registration deadline</label><input type="text" id="ef_deadline" placeholder="e.g. Oct 5, 2026"></div>
+        </div>
+        <div class="form-grid-2">
+          <div><label>Venue</label><input type="text" id="ef_venue"></div>
+          <div><label>City, State, Country</label><input type="text" id="ef_location" placeholder="Indore, Madhya Pradesh, India"></div>
+        </div>
+        <div class="form-grid-2">
+          <div><label>Registration fee</label><input type="text" id="ef_fee" placeholder="₹300 or Free"></div>
+          <div><label>Prize money</label><input type="text" id="ef_prize" placeholder="₹50,000"></div>
+        </div>
+        <div class="form-grid-2">
+          <div><label>Capacity / participant limit</label><input type="text" id="ef_capacity" placeholder="e.g. 64 crews"></div>
+          <div><label>Organizer contact email</label><input type="email" id="ef_contact"></div>
+        </div>
+        <label>Judges (comma separated)</label><input type="text" id="ef_judges" placeholder="Name One, Name Two">
+        <label>Guest artists (comma separated)</label><input type="text" id="ef_guests" placeholder="Guest One, Guest Two">
+        <label>Sponsors &amp; partners (comma separated)</label><input type="text" id="ef_sponsors" placeholder="Sponsor One, Sponsor Two">
+        <label>Event schedule</label>
+        <div id="scheduleRows"></div>
+        <button type="button" class="add-row-btn" onclick="addScheduleRow()">+ Add schedule item</button>
+        <label style="margin-top:18px;">Rules &amp; guidelines (one per line)</label>
+        <textarea id="ef_rules" rows="4" placeholder="No pre-written verses in the final round&#10;Decisions by judges are final"></textarea>
+        <button type="submit" class="btn btn-solid">Submit for Admin Approval</button>
+        <div class="confirm-banner" id="eventFormConfirm">✓ Event submitted — it will appear on the platform once approved.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INSTRUCTOR AUTH ================= -->
+<section class="page" id="page-instructor-auth">
+  <div class="container"><div class="auth-wrap">
+    <span class="eyebrow" style="display:block;text-align:center;margin-bottom:8px;">Instructor Portal</span>
+    <h1 class="page-title">Register &amp; List Classes</h1>
+    <div class="card">
+      <div class="role-note">New listings go live only after admin review, keeping the Classes &amp; Workshops directory verified and spam-free.</div>
+      <form class="reg-form" id="instructorRegForm">
+        <label>Instructor / Studio name</label><input type="text" id="insName" required>
+        <label>Contact email</label><input type="email" id="insEmail" required>
+        <label>Phone</label><input type="tel" id="insPhone">
+        <label>City / Country</label><input type="text" id="insCity" placeholder="Mumbai, India">
+        <label>Primary art form</label><select id="insArtForm"></select>
+        <button type="submit" class="btn btn-solid">Create Instructor Account</button>
+      </form>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= INSTRUCTOR DASHBOARD ================= -->
+<section class="page" id="page-instructor-dashboard">
+  <div class="container">
+    <div class="dash-head">
+      <div><h2 id="insDashName">Instructor Dashboard</h2><div class="sub">Manage your classes and workshop listings.</div></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-solid" onclick="openClassForm(null)">+ Create New Class</button>
+        <button class="btn" onclick="logoutSession()">Log out</button>
+      </div>
+    </div>
+    <div class="dash-stats" id="insStats"></div>
+    <div class="dash-section"><h4>My Classes &amp; Workshops</h4><div id="insClassesList"></div></div>
+  </div>
+</section>
+
+<!-- ================= INSTRUCTOR CLASS FORM ================= -->
+<section class="page" id="page-instructor-class-form">
+  <div class="container">
+    <span class="back-btn" onclick="goTo('instructor-dashboard')">← Back to dashboard</span>
+    <div class="page-head"><span class="eyebrow">Instructor Portal</span><h1 class="page-title" id="classFormTitle">Create Class</h1></div>
+    <div class="card" style="max-width:840px;">
+      <form class="reg-form" id="classForm">
+        <div class="form-grid-2">
+          <div><label>Class / Workshop title</label><input type="text" id="cf_title" required></div>
+          <div><label>Instructor name</label><input type="text" id="cf_instructor" required></div>
+        </div>
+        <label>Course description</label><textarea id="cf_desc" rows="3" required></textarea>
+        <div class="form-grid-2">
+          <div><label>Art form</label><select id="cf_artform"></select></div>
+          <div><label>Skill level</label><select id="cf_skill"><option>Beginner</option><option>Intermediate</option><option>Advanced / Pro</option><option>All Levels</option></select></div>
+        </div>
+        <div class="form-grid-2">
+          <div><label>Format</label><select id="cf_mode"><option>Offline</option><option>Online</option><option>Hybrid</option></select></div>
+          <div><label>City, Country</label><input type="text" id="cf_location" placeholder="Mumbai, India"></div>
+        </div>
+        <div class="form-grid-2">
+          <div><label>Venue</label><input type="text" id="cf_venue" placeholder="Studio name (leave blank if online)"></div>
+          <div><label>Duration</label><input type="text" id="cf_duration" placeholder="e.g. 6 weeks"></div>
+        </div>
+        <div class="form-grid-2">
+          <div><label>Schedule</label><input type="text" id="cf_schedule" placeholder="e.g. Tue &amp; Thu, 7–8:30 PM"></div>
+          <div><label>Batch timings</label><input type="text" id="cf_batch" placeholder="e.g. Evening Batch"></div>
+        </div>
+        <div class="form-grid-2">
+          <div><label>Fees</label><input type="text" id="cf_fees" placeholder="₹4,500"></div>
+          <div><label>Available seats</label><input type="text" id="cf_seats" placeholder="e.g. 12"></div>
+        </div>
+        <label>Contact information</label><input type="email" id="cf_contact" placeholder="you@studio.com">
+        <button type="submit" class="btn btn-solid">Submit for Admin Approval</button>
+        <div class="confirm-banner" id="classFormConfirm">✓ Class submitted — it will appear on the platform once approved.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARTIST AUTH ================= -->
+<section class="page" id="page-artist-auth">
+  <div class="container"><div class="auth-wrap">
+    <span class="eyebrow" style="display:block;text-align:center;margin-bottom:8px;">Artist Portal</span>
+    <h1 class="page-title">Register &amp; Build Your Portfolio</h1>
+    <div class="card">
+      <div class="role-note">Your profile is reviewed by admin before it appears in the public directory. You can keep editing anytime.</div>
+      <form class="reg-form" id="artistRegForm">
+        <label>Full name</label><input type="text" id="ar_name" required>
+        <label>City, Country</label><input type="text" id="ar_city" placeholder="Indore, India">
+        <label>Disciplines</label><div class="chip-group" id="ar_disciplines"></div>
+        <label style="margin-top:16px;">Short bio</label><textarea id="ar_bio" rows="3"></textarea>
+        <button type="submit" class="btn btn-solid">Create Artist Account</button>
+      </form>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ARTIST DASHBOARD ================= -->
+<section class="page" id="page-artist-dashboard">
+  <div class="container">
+    <div class="dash-head">
+      <div><h2 id="artDashName">Artist Dashboard</h2><div class="sub" id="artDashStatusLine"></div></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-solid" onclick="openPortfolioForm()">Edit Portfolio</button>
+        <button class="btn" onclick="logoutSession()">Log out</button>
+      </div>
+    </div>
+    <div class="dash-stats" id="artDashStats"></div>
+    <div class="dash-section"><h4>Profile Preview</h4><div id="artDashPreview"></div></div>
+    <div class="dash-section"><h4>Booking Requests For You</h4><div id="artDashBookings"></div></div>
+  </div>
+</section>
+
+<!-- ================= ARTIST PORTFOLIO FORM ================= -->
+<section class="page" id="page-artist-portfolio-form">
+  <div class="container">
+    <span class="back-btn" onclick="goTo('artist-dashboard')">← Back to dashboard</span>
+    <div class="page-head"><span class="eyebrow">Artist Portal</span><h1 class="page-title">Edit Portfolio</h1></div>
+    <div class="card" style="max-width:840px;">
+      <form class="reg-form" id="portfolioForm">
+        <label>Full name</label><input type="text" id="pf_name" required>
+        <label>City, Country</label><input type="text" id="pf_city">
+        <label>Disciplines</label><div class="chip-group" id="pf_disciplines"></div>
+        <label style="margin-top:16px;">Bio</label><textarea id="pf_bio" rows="3"></textarea>
+        <label>Specialization</label><input type="text" id="pf_spec" placeholder="e.g. Breaking, Krump, Commercial Choreography">
+        <label>Achievements (one per line)</label><textarea id="pf_achievements" rows="4"></textarea>
+        <label>Instagram handle</label><input type="text" id="pf_social" placeholder="@yourhandle">
+        <button type="submit" class="btn btn-solid">Save &amp; Submit for Review</button>
+        <div class="confirm-banner" id="portfolioFormConfirm">✓ Changes submitted — admin will review before they go live.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ADMIN LOGIN ================= -->
+<section class="page" id="page-admin-login">
+  <div class="container"><div class="auth-wrap">
+    <span class="eyebrow" style="display:block;text-align:center;margin-bottom:8px;">Restricted Access</span>
+    <h1 class="page-title">Admin Panel</h1>
+    <div class="card">
+      <form class="reg-form" id="adminLoginForm">
+        <label>Admin username</label><input type="text" placeholder="admin" required>
+        <label>Password</label><input type="password" placeholder="••••••••" required>
+        <button type="submit" class="btn btn-solid">Enter Admin Panel</button>
+      </form>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ADMIN DASHBOARD ================= -->
+<section class="page" id="page-admin-dashboard">
+  <div class="container">
+    <div class="dash-head">
+      <div><h2>Admin Control Panel</h2><div class="sub">Approve content and oversee the whole platform, across all three modules.</div></div>
+      <button class="btn" onclick="logoutSession()">Log out</button>
+    </div>
+    <div class="dash-stats" id="adminStats"></div>
+    <div class="tabbar" id="adminTabs">
+      <button class="active" data-tab="pending-events">Pending Events</button>
+      <button data-tab="pending-classes">Pending Classes</button>
+      <button data-tab="pending-artists">Pending Artists</button>
+      <button data-tab="bookings">Booking Requests</button>
+      <button data-tab="promotions">Promotions</button>
+      <button data-tab="all-events">All Events</button>
+      <button data-tab="all-classes">All Classes</button>
+      <button data-tab="all-artists">All Artists</button>
+    </div>
+    <div class="tabpanel active" id="tab-pending-events"><div id="pendingEventsList"></div></div>
+    <div class="tabpanel" id="tab-pending-classes"><div id="pendingClassesList"></div></div>
+    <div class="tabpanel" id="tab-pending-artists"><div id="pendingArtistsList"></div></div>
+    <div class="tabpanel" id="tab-bookings"><div id="bookingRequestsList"></div></div>
+    <div class="tabpanel" id="tab-promotions"><div id="promoRequestsList"></div></div>
+    <div class="tabpanel" id="tab-all-events"><div id="allEventsTable"></div></div>
+    <div class="tabpanel" id="tab-all-classes"><div id="allClassesTable"></div></div>
+    <div class="tabpanel" id="tab-all-artists"><div id="allArtistsTable"></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <div class="logo"><span class="reg">Cosmic</span><span class="dot">·</span><span class="italic">Elemental</span></div>
+        <p>A world built for artists — events, classes, and a directory that doubles as a talent agency for the global underground creative community.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h5>Platform</h5>
+          <a data-nav="events">Discover Events</a>
+          <a data-nav="classes">Classes &amp; Workshops</a>
+          <a data-nav="directory">Artist Directory</a>
+        </div>
+        <div class="foot-col"><h5>Get Listed</h5>
+          <a data-nav="organizer-auth">List an Event</a>
+          <a data-nav="instructor-auth">List a Class</a>
+          <a data-nav="artist-auth">Join as an Artist</a>
+        </div>
+        <div class="foot-col"><h5>Company</h5>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 COSMIC ELEMENTAL</span><span>A WORLD BUILT FOR ARTISTS</span></div>
+  </div>
+</footer>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head"><h3>Saved Artists</h3><button class="drawer-close" id="drawerClose">✕</button></div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot"><button class="btn btn-solid" data-nav="directory" onclick="closeDrawer()">Browse Directory</button></div>
 </div>
+
+<script>
+/* ============ CONSTANTS ============ */
+const YELLOW='#F0C400', ROSE='#FF4D6D', TEAL='#0FAE9B';
+const ACCENTS=['#F0C400','#FF4D6D','#0FAE9B','#7C5CFF','#FF8A3D'];
+function accentFor(str){ let h=0; for(const c of String(str)) h=(h*31+c.charCodeAt(0))%997; return ACCENTS[h%ACCENTS.length]; }
+function dateBadge(dateStr){
+  const parts=String(dateStr).split(' ');
+  return {mon:(parts[0]||'').toUpperCase().slice(0,3), day:(parts[1]||'').replace(',','')};
+}
+function mediaBlock(ac,dateStr,onSave){
+  const db=dateBadge(dateStr);
+  return `<div class="accent-bar" style="background:linear-gradient(150deg,${ac}55,${ac}22);">
+    <div class="date-badge"><span>${db.mon}</span><b>${db.day}</b></div>
+    <span class="bk-icon" onclick="event.stopPropagation();${onSave||''}">♡</span>
+  </div>`;
+}
+const EVENT_TYPES=["Battle","Jam","Festival","Showcase","Competition","Session","Cypher"];
+const ART_FORMS=["Dance","DJ","Rap","Graffiti","Beatboxing","Music","Photography","Direction / DOP"];
+const DISCIPLINES=[...new Set([...ART_FORMS,"Choreography","Muralist","Songwriting"])];
+
+/* ============ SEED DATA ============ */
+const EVENTS=[
+  {id:1,title:"Concrete Kings Bboy Battle",type:"Battle",category:"Dance",date:"Aug 16, 2026",deadline:"Aug 10, 2026",venue:"Freedom Park Amphitheatre",city:"Mumbai",state:"Maharashtra",country:"India",fee:"₹500",prize:"₹75,000",capacity:"64 crews",skill:"Advanced / Pro",
+    desc:"A 2v2 breaking battle bringing together the country's sharpest bboy and bgirl crews for a night of high-stakes freestyle. Open cyphers before finals, judged on musicality, execution and originality.",
+    judges:["Ravi 'Skyzoo' Menon","Aiko Tanaka","Deshawn 'Flexx' Ortiz"],guests:["DJ Nomad","The Groove Cartel"],
+    schedule:[{t:"4:00 PM",i:"Registration & warm-up cyphers"},{t:"5:30 PM",i:"Prelims begin"},{t:"7:30 PM",i:"Top 8 announced"},{t:"8:30 PM",i:"Finals & judges showcase"},{t:"9:30 PM",i:"Prize distribution"}],
+    sponsors:["Redline Sneakers","Freshbox Energy","Studio 84"],organizer:"Concrete Kings Collective",contact:"events@concretekings.in",
+    rules:["Teams of 2, no substitutions after registration","Music selected live by resident DJ","No props or costumes exceeding safety guidelines","Decisions by judges are final"]},
+  {id:2,title:"Beat Foundry Producer Jam",type:"Jam",category:"DJ",date:"Sep 2, 2026",deadline:"Aug 25, 2026",venue:"Warehouse 9, Lower Parel",city:"Mumbai",state:"Maharashtra",country:"India",fee:"Free",prize:"Studio time worth ₹1,00,000",capacity:"120 attendees",skill:"Intermediate",
+    desc:"An open-format producer jam where DJs and beatmakers trade sets, remix live, and collaborate across genres — from house to hip-hop to bass.",
+    judges:["N/A — collaborative jam, no judging"],guests:["DJ Kavya","Lo-Fi Larkin"],
+    schedule:[{t:"6:00 PM",i:"Doors open, gear setup"},{t:"7:00 PM",i:"Open decks rotation"},{t:"9:00 PM",i:"Collab remix round"},{t:"11:00 PM",i:"Closing set"}],
+    sponsors:["Pioneer DJ India","Warehouse 9"],organizer:"Beat Foundry",contact:"hello@beatfoundry.co",
+    rules:["Bring your own USB / controller if performing","Respect the 15-minute set limit","No genre restrictions"]},
+  {id:3,title:"Wall Republic Graffiti Jam",type:"Jam",category:"Graffiti",date:"Sep 14, 2026",deadline:"Sep 5, 2026",venue:"Industrial Yard, Sector 12",city:"Indore",state:"Madhya Pradesh",country:"India",fee:"₹300",prize:"₹40,000 + featured wall",capacity:"50 writers",skill:"All Levels",
+    desc:"A full-day legal wall session where writers of every level paint side-by-side, culminating in a public showcase and community vote.",
+    judges:["Bantai","Yantr","Zine Collective"],guests:["Local mural cooperative"],
+    schedule:[{t:"9:00 AM",i:"Wall allocation"},{t:"10:00 AM",i:"Painting begins"},{t:"4:00 PM",i:"Public walkthrough"},{t:"6:00 PM",i:"Community vote & prize"}],
+    sponsors:["Montana Colors","Indore Arts Trust"],organizer:"Wall Republic",contact:"paint@wallrepublic.in",
+    rules:["Bring your own cans (limited stock available for sale)","Respect allocated wall space","No hate symbols or offensive content"]},
+  {id:4,title:"Mic Drop Rap Cypher Cup",type:"Cypher",category:"Rap",date:"Aug 29, 2026",deadline:"Aug 20, 2026",venue:"The Basement Club",city:"Delhi",state:"Delhi",country:"India",fee:"₹200",prize:"₹1,00,000",capacity:"32 MCs",skill:"Advanced / Pro",
+    desc:"Bar-for-bar knockout cypher battles across three rounds — punchline, storytelling, and freestyle — judged by the scene's most respected voices.",
+    judges:["Raftaar's Camp Judge Panel","MC Mawali","Kaam Bhaari"],guests:["Seedhe Maut (guest set)"],
+    schedule:[{t:"5:00 PM",i:"Check-in & bracket reveal"},{t:"6:00 PM",i:"Round 1 — Punchline"},{t:"7:30 PM",i:"Round 2 — Storytelling"},{t:"8:30 PM",i:"Final — Freestyle"},{t:"9:30 PM",i:"Guest performance & awards"}],
+    sponsors:["Azadi Records","The Basement Club"],organizer:"Mic Drop Collective",contact:"bookings@micdrop.in",
+    rules:["No pre-written final round bars","Explicit content allowed, hate speech is not","One rebuttal per battle"]},
+  {id:5,title:"Vocal Anomaly Beatbox Showcase",type:"Showcase",category:"Beatboxing",date:"Sep 20, 2026",deadline:"Sep 12, 2026",venue:"Sound Garden Theatre",city:"Bengaluru",state:"Karnataka",country:"India",fee:"₹350",prize:"₹30,000",capacity:"200 audience",skill:"All Levels",
+    desc:"A curated showcase spotlighting India's top beatboxers alongside international guest performers, followed by an open beat-battle segment.",
+    judges:["Panel of 3 beatbox champions"],guests:["Reeps One (international guest)","Yodda"],
+    schedule:[{t:"5:30 PM",i:"Doors & opening acts"},{t:"6:30 PM",i:"Featured showcase sets"},{t:"8:00 PM",i:"Open beat battle"},{t:"9:00 PM",i:"Guest headline set"}],
+    sponsors:["Sound Garden","Anomaly Audio"],organizer:"Vocal Anomaly",contact:"team@vocalanomaly.in",
+    rules:["Open battle sign-ups close 30 mins before showcase","No looping devices in the battle segment"]},
+  {id:6,title:"Shutter Underground Photo Fest",type:"Festival",category:"Photography",date:"Oct 4, 2026",deadline:"Sep 24, 2026",venue:"Old Textile Mill Grounds",city:"Ahmedabad",state:"Gujarat",country:"India",fee:"₹450",prize:"₹60,000 + gallery feature",capacity:"Open entry",skill:"Intermediate",
+    desc:"A weekend festival celebrating street and subculture photography — live shoots at battles and jams across the city, exhibited on closing night.",
+    judges:["Amit Madheshiya","Priya Ramrakha Foundation rep"],guests:["Street photography walk leaders"],
+    schedule:[{t:"Day 1",i:"City-wide live shoot access passes"},{t:"Day 2",i:"Portfolio review sessions"},{t:"Day 3",i:"Exhibition & prize night"}],
+    sponsors:["Fujifilm India","Mill Gallery"],organizer:"Shutter Underground",contact:"submit@shutterunderground.in",
+    rules:["Max 10 submissions per photographer","Must be shot within festival dates","Editing limited to color/exposure, no compositing"]},
+];
+EVENTS.forEach(e=>{ e.status='approved'; e.suspended=false; e.organizerId=null; e.promoted=false; });
+
+const ARTISTS=[
+  {id:1,name:"Aarav Deshmukh",disciplines:["Dance","Choreography"],city:"Mumbai, India",verified:true,
+    bio:"Bboy and choreographer with 12 years on the underground battle circuit, now directing movement for brand campaigns and music videos across South Asia.",
+    specialization:"Breaking, Krump, Commercial Choreography",
+    achievements:["Winner — Concrete Kings Battle 2024 & 2025","Choreographed 3 national ad campaigns","Judge, Red Bull BC One India Cypher"],
+    events:34, exp:12, social:{ig:"@aarav.moves"}},
+  {id:2,name:"Meher Osomo",disciplines:["DJ","Music"],city:"Bengaluru, India",verified:true,
+    bio:"House and bass producer known for genre-bending live sets, resident DJ at three major festival stages and founder of the Beat Foundry jam series.",
+    specialization:"House, UK Bass, Live Production",
+    achievements:["Resident — Beat Foundry","Played Sunburn Arena stage, 2025","Released 2 EPs on independent labels"],
+    events:52, exp:9, social:{ig:"@mehermusic"}},
+  {id:3,name:"Yantr",disciplines:["Graffiti","Muralist"],city:"Indore, India",verified:false,
+    bio:"Graffiti writer and muralist blending traditional lettering with large-scale public murals commissioned by civic and cultural bodies.",
+    specialization:"Wildstyle Lettering, Large-Scale Murals",
+    achievements:["40+ public murals across Central India","Featured, Wall Republic Jam 2025","Collaborated with Indore Arts Trust"],
+    events:21, exp:8, social:{ig:"@yantr.walls"}},
+  {id:4,name:"Kaam Bhaari Jr.",disciplines:["Rap","Songwriting"],city:"Delhi, India",verified:true,
+    bio:"Battle MC turned recording artist, known for razor-sharp punchline rounds and a growing catalog of independently released tracks.",
+    specialization:"Battle Rap, Hindi/English Bars, Songwriting",
+    achievements:["Finalist — Mic Drop Cypher Cup 2025","3M+ streams across platforms","Featured on Azadi Records compilation"],
+    events:29, exp:7, social:{ig:"@kaambhaarijr"}},
+  {id:5,name:"Zoya Fernandes",disciplines:["Beatboxing"],city:"Bengaluru, India",verified:true,
+    bio:"One of the few prominent female beatboxers on the national circuit, blending vocal percussion with looped harmonies for solo showcase sets.",
+    specialization:"Vocal Percussion, Live Looping",
+    achievements:["Showcase headliner — Vocal Anomaly 2025","Workshop instructor, 6 cities","Collaborated with Reeps One on a joint set"],
+    events:17, exp:5, social:{ig:"@zoyabeats"}},
+  {id:6,name:"Devansh Rao",disciplines:["Photography","Direction / DOP"],city:"Ahmedabad, India",verified:false,
+    bio:"Documentary-style photographer and DOP capturing underground culture in motion — from battle floors to backstage moments.",
+    specialization:"Street & Event Photography, Music Video DOP",
+    achievements:["Gallery feature — Shutter Underground Fest","Shot 8 independent music videos","Contributor to 2 culture zines"],
+    events:38, exp:6, social:{ig:"@devansh.frames"}},
+  {id:7,name:"Ishaan Vora",disciplines:["Dance","DJ"],city:"Pune, India",verified:true,
+    bio:"Dual-threat performer who battles as a popper by day and spins Afro-house sets by night — a fixture at hybrid dance-music showcases.",
+    specialization:"Popping, Afro-House DJ Sets",
+    achievements:["Top 8 — national popping championship","Resident DJ, three club nights","Runs a weekly community dance jam"],
+    events:26, exp:6, social:{ig:"@ishaanvora"}},
+  {id:8,name:"Reet Chatterjee",disciplines:["Rap","Beatboxing"],city:"Kolkata, India",verified:false,
+    bio:"Multidisciplinary vocalist combining beatbox loops with bilingual rap verses, building a following through live open-mic circuits.",
+    specialization:"Bilingual Rap, Beatbox-Rap Fusion",
+    achievements:["Open mic circuit regular, 15+ cities","Self-released debut EP, 2025","Featured artist, local culture podcast"],
+    events:14, exp:4, social:{ig:"@reetraps"}},
+];
+ARTISTS.forEach(a=>{ a.status='approved'; a.suspended=false; });
+
+const CLASSES=[
+  {id:1,title:"Foundations of Breaking",instructor:"Aarav Deshmukh",artForm:"Dance",skill:"Beginner",mode:"Offline",venue:"Studio 9, Bandra",city:"Mumbai",country:"India",schedule:"Tue & Thu, 7:00–8:30 PM",duration:"6 weeks",fees:"₹4,500",batch:"Evening Batch",seats:"12",
+    desc:"A ground-up breaking foundation course covering top rock, footwork, freezes and musicality — built for complete beginners with no dance background required.",contact:"aarav@studio9.in"},
+  {id:2,title:"House Music Production Bootcamp",instructor:"Meher Osomo",artForm:"DJ",skill:"Intermediate",mode:"Online",venue:"",city:"Bengaluru",country:"India",schedule:"Sat, 6:00–8:00 PM",duration:"4 weeks",fees:"₹6,000",batch:"Weekend Batch",seats:"20",
+    desc:"Learn house production from arrangement to mixdown, taught live over video with weekly track feedback from a working festival DJ.",contact:"meher@beatfoundry.co"},
+  {id:3,title:"Graffiti Lettering Intensive",instructor:"Yantr",artForm:"Graffiti",skill:"Beginner",mode:"Offline",venue:"Wall Republic Yard",city:"Indore",country:"India",schedule:"Sun, 10:00 AM–1:00 PM",duration:"3 weeks",fees:"₹3,000",batch:"Weekend Batch",seats:"15",
+    desc:"Master the fundamentals of wildstyle lettering, can control and legal wall etiquette from one of Central India's most active muralists.",contact:"paint@wallrepublic.in"},
+  {id:4,title:"Battle Rap Writing Workshop",instructor:"Kaam Bhaari Jr.",artForm:"Rap",skill:"Intermediate",mode:"Offline",venue:"The Basement Club",city:"Delhi",country:"India",schedule:"Wed, 7:00–9:00 PM",duration:"2 weeks",fees:"₹2,500",batch:"Evening Batch",seats:"18",
+    desc:"A punchline and structure-focused workshop on writing battle rounds, with live cypher practice each session.",contact:"bookings@micdrop.in"},
+  {id:5,title:"Vocal Percussion for Beginners",instructor:"Zoya Fernandes",artForm:"Beatboxing",skill:"Beginner",mode:"Online",venue:"",city:"Bengaluru",country:"India",schedule:"Mon & Fri, 6:30–7:30 PM",duration:"4 weeks",fees:"₹2,000",batch:"Evening Batch",seats:"25",
+    desc:"Learn core beatbox sounds, breathing technique and basic looping — a friendly on-ramp taught by a national showcase headliner.",contact:"team@vocalanomaly.in"},
+];
+CLASSES.forEach(c=>{ c.status='approved'; c.suspended=false; c.instructorId=null; });
+
+const ORGANIZERS=[], INSTRUCTORS=[];
+const PROMO_PACKAGES=[
+  {id:'homepage',name:'Homepage Feature',desc:'Pinned to the homepage feature tiles for 7 days',price:'₹5,000 / week'},
+  {id:'spotlight',name:'Category Spotlight',desc:'Top placement within your art form & event type filters',price:'₹2,500 / week'},
+  {id:'ticker',name:'Ticker Boost',desc:'Repeated placement in the site-wide scrolling ticker',price:'₹1,500 / week'},
+];
+const PROMOTION_REQUESTS=[]; let promoReqId=1;
+const BOOKING_REQUESTS=[]; let bookingReqId=1;
+
+let shortlist=[];
+let activeCategories=new Set(), activeTypes=new Set(), activeDisciplines=new Set();
+let activeClArtForm=new Set(), activeClMode=new Set();
+let session={role:null,organizerId:null,instructorId:null,artistId:null};
+let editingEventId=null, editingClassId=null, bookingArtistId=null, scheduleRowCount=0;
+
+/* ============ NAV / ROUTER ============ */
+function goTo(page){
+  const wasActive = document.querySelector('.page.active');
+  const isNewPage = !wasActive || wasActive.id !== 'page-'+page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.navlinks button').forEach(b=>b.classList.toggle('active', b.dataset.nav===page));
+  document.querySelectorAll('#page-'+page+' .shimmer-text').forEach(scrambleReveal);
+  if(page==='organizer-dashboard') renderOrganizerDashboard();
+  if(page==='instructor-dashboard') renderInstructorDashboard();
+  if(page==='artist-dashboard') renderArtistDashboard();
+  if(page==='admin-dashboard') renderAdminDashboard();
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(checkReveals, 60);
+  if(isNewPage) blendTransition();
+}
+function blendTransition(){
+  const canvas=document.getElementById('motionBg');
+  if(!canvas || prefersReducedMotion) return;
+  canvas.style.transition='opacity .25s ease, filter .25s ease';
+  canvas.style.opacity='1';
+  canvas.style.filter='blur(3px) saturate(1.4)';
+  setTimeout(()=>{ canvas.style.opacity='0.7'; canvas.style.filter='blur(0) saturate(1)'; }, 320);
+}
+document.querySelectorAll('[data-nav]').forEach(el=>el.addEventListener('click', ()=>goTo(el.dataset.nav)));
+document.getElementById('burgerBtn').addEventListener('click', ()=>{
+  const nl=document.getElementById('navlinks');
+  const showing = nl.style.display==='flex';
+  nl.style.display = showing ? 'none':'flex';
+  nl.style.flexDirection='column'; nl.style.position='absolute'; nl.style.top='64px'; nl.style.right='20px';
+  nl.style.background='var(--bg-panel)'; nl.style.border='1px solid var(--line)'; nl.style.borderRadius='4px'; nl.style.padding='10px';
+});
+
+/* ============ MOTION BACKGROUND (video-style looping backdrop) ============ */
+/* No video asset was supplied, so this substitutes a continuously animated,
+   canvas-drawn gradient loop — visually similar to a looping background video.
+   Swap in a real <video> element here if a brand video file is provided. */
+let mbCtx, mbW=0, mbH=0, mbT=0;
+function initMotionBg(){
+  const canvas=document.getElementById('motionBg');
+  mbCtx = canvas.getContext('2d');
+  function resize(){ mbW=canvas.width=window.innerWidth; mbH=canvas.height=window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  animateMotionBg();
+}
+function animateMotionBg(){
+  requestAnimationFrame(animateMotionBg);
+  if(document.hidden || !mbCtx) return;
+  mbT += 0.0035;
+  mbCtx.clearRect(0,0,mbW,mbH);
+  mbCtx.globalCompositeOperation='lighter';
+  const blobs=[
+    {color:'rgba(245,230,0,0.16)', r:0.38}, {color:'rgba(255,92,106,0.14)', r:0.32}, {color:'rgba(47,217,190,0.14)', r:0.30}
+  ];
+  blobs.forEach((b,i)=>{
+    const ang=mbT*(0.5+i*0.2)+i*2.1;
+    const cx=mbW*0.5 + Math.cos(ang)*mbW*0.32;
+    const cy=mbH*0.5 + Math.sin(ang*1.3)*mbH*0.28;
+    const rad=Math.min(mbW,mbH)*b.r;
+    const g=mbCtx.createRadialGradient(cx,cy,0,cx,cy,rad);
+    g.addColorStop(0,b.color); g.addColorStop(1,'rgba(0,0,0,0)');
+    mbCtx.fillStyle=g;
+    mbCtx.fillRect(0,0,mbW,mbH);
+  });
+  mbCtx.globalCompositeOperation='source-over';
+}
+function getScrollFraction(){
+  const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+  return Math.min(Math.max(window.scrollY/max, 0), 1);
+}
+
+/* ============ MOUSE-FOLLOW PARALLAX ============ */
+function initMouseParallax(){ return;
+  document.addEventListener('mousemove', e=>{
+    if(prefersReducedMotion) return;
+    const nx=(e.clientX/window.innerWidth - 0.5);
+    const ny=(e.clientY/window.innerHeight - 0.5);
+    document.documentElement.style.setProperty('--mx', nx.toFixed(3));
+    document.documentElement.style.setProperty('--my', ny.toFixed(3));
+  });
+}
+
+/* ============ SCROLL-DRIVEN STORYTELLING ============ */
+const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function checkReveals(){
+  const vh = window.innerHeight;
+  document.querySelectorAll('.page.active .reveal').forEach(el=>{
+    if(prefersReducedMotion){ el.style.opacity=1; el.style.transform='none'; el.style.filter='none'; return; }
+    const r = el.getBoundingClientRect();
+    // progress 0 → just entering bottom of viewport, 1 → fully settled in the reading zone
+    let progress = (vh*0.94 - r.top) / (vh*0.55);
+    progress = Math.min(Math.max(progress, 0), 1);
+    const eased = 1 - Math.pow(1-progress, 3); // ease-out cubic
+    el.style.opacity = eased;
+    el.style.transform = `translateY(${(1-eased)*28}px) scale(${0.97+eased*0.03})`;
+    el.style.filter = `blur(${(1-eased)*6}px)`;
+  });
+  // stat row cells count up into place with a slight stagger, driven by scroll progress of the row
+  document.querySelectorAll('.page.active .stat-row').forEach(row=>{
+    const r = row.getBoundingClientRect();
+    let rowProgress = (vh*0.95 - r.top) / (vh*0.4);
+    rowProgress = Math.min(Math.max(rowProgress,0),1);
+    Array.from(row.children).forEach((cell,i)=>{
+      const local = Math.min(Math.max((rowProgress - i*0.08)*1.6, 0), 1);
+      cell.style.opacity = prefersReducedMotion ? 1 : local;
+      cell.style.transform = prefersReducedMotion ? 'none' : `translateY(${(1-local)*14}px)`;
+    });
+  });
+}
+window.addEventListener('scroll', checkReveals);
+window.addEventListener('resize', checkReveals);
+
+/* ============ TICKER ============ */
+function initTicker(){
+  const order=["Battles","Cyphers","Jams","Showcases","Festivals","Competitions","Sessions"];
+  const html = order.map(t=>`<span>${t}</span>`).join('');
+  document.getElementById('tickerTrack').innerHTML = html+html;
+}
+
+/* ============ FORM SELECT OPTIONS ============ */
+function populateSelectOptions(){
+  document.getElementById('ef_type').innerHTML = EVENT_TYPES.map(t=>`<option>${t}</option>`).join('');
+  document.getElementById('ef_category').innerHTML = ART_FORMS.map(a=>`<option>${a}</option>`).join('');
+  document.getElementById('cf_artform').innerHTML = ART_FORMS.map(a=>`<option>${a}</option>`).join('');
+  document.getElementById('insArtForm').innerHTML = ART_FORMS.map(a=>`<option>${a}</option>`).join('');
+}
+
+/* ============ EVENTS ============ */
+function initFilters(){
+  document.getElementById('fCategory').innerHTML = ART_FORMS.map(c=>`<button class="chip" data-cat="${c}">${c}</button>`).join('');
+  document.getElementById('fType').innerHTML = EVENT_TYPES.map(t=>`<button class="chip" data-type="${t}">${t}</button>`).join('');
+  const sel=document.getElementById('fCountry');
+  [...new Set(EVENTS.map(e=>e.country))].forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
+  document.querySelectorAll('#fCategory .chip').forEach(chip=>chip.addEventListener('click',()=>{chip.classList.toggle('on');const c=chip.dataset.cat;activeCategories.has(c)?activeCategories.delete(c):activeCategories.add(c);renderEvents();}));
+  document.querySelectorAll('#fType .chip').forEach(chip=>chip.addEventListener('click',()=>{chip.classList.toggle('on');const t=chip.dataset.type;activeTypes.has(t)?activeTypes.delete(t):activeTypes.add(t);renderEvents();}));
+  document.getElementById('fCountry').addEventListener('change', renderEvents);
+  document.getElementById('fSkill').addEventListener('change', renderEvents);
+  document.getElementById('evSearch').addEventListener('input', renderEvents);
+  document.getElementById('clearFilters').addEventListener('click', ()=>{
+    activeCategories.clear(); activeTypes.clear();
+    document.querySelectorAll('#fCategory .chip, #fType .chip').forEach(c=>c.classList.remove('on'));
+    document.getElementById('fCountry').value=''; document.getElementById('fSkill').value=''; document.getElementById('evSearch').value='';
+    renderEvents();
+  });
+}
+function renderEvents(){
+  const q=document.getElementById('evSearch').value.toLowerCase();
+  const country=document.getElementById('fCountry').value, skill=document.getElementById('fSkill').value;
+  let list = EVENTS.filter(e=>{
+    if(e.status!=='approved'||e.suspended) return false;
+    if(activeCategories.size && !activeCategories.has(e.category)) return false;
+    if(activeTypes.size && !activeTypes.has(e.type)) return false;
+    if(country && e.country!==country) return false;
+    if(skill && e.skill!==skill) return false;
+    if(q && !(e.title.toLowerCase().includes(q)||e.city.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  list.sort((a,b)=>(b.promoted?1:0)-(a.promoted?1:0));
+  document.getElementById('evCount').textContent = `${list.length} event${list.length!==1?'s':''} found`;
+  document.getElementById('evGrid').innerHTML = list.map(e=>{
+    const ac=accentFor(e.category);
+    return `<div class="plate-card" onclick="openEvent(${e.id})">
+      ${mediaBlock(ac,e.date)}
+      <div class="plate-body">
+        <div class="plate-tags"><span style="color:${ac};">${e.type}</span><span style="color:var(--dim);">· ${e.category}</span>${e.promoted?'<span class="promo-flag">★ PROMOTED</span>':''}</div>
+        <h3>${e.title}</h3>
+        <div class="plate-meta"><span>${e.venue}, ${e.city}</span></div>
+        <div class="plate-foot"><span class="prize-tag">${e.prize}</span><span class="view-link">View →</span></div>
+      </div>
+    </div>`;
+  }).join('') || `<p style="color:var(--dim);">No events match your filters yet — try clearing a few.</p>`;
+  initTilt('#evGrid .plate-card');
+}
+function renderHomeFeatured(){
+  const el=document.getElementById('homeFeatured');
+  if(!el) return;
+  const list=EVENTS.filter(e=>e.status==='approved'&&!e.suspended).slice(0,4);
+  el.innerHTML = list.map(e=>{
+    const ac=accentFor(e.category);
+    return `<div class="plate-card" onclick="openEvent(${e.id})">
+      ${mediaBlock(ac,e.date)}
+      <div class="plate-body">
+        <div class="plate-tags"><span style="color:${ac};">${e.type}</span><span style="color:var(--dim);">· ${e.category}</span></div>
+        <h3>${e.title}</h3>
+        <div class="plate-meta"><span>${e.venue}, ${e.city}</span></div>
+        <div class="plate-foot"><span class="prize-tag">${e.prize}</span><span class="view-link">View →</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function openEvent(id){
+  const e=EVENTS.find(x=>x.id===id); const ac=accentFor(e.category);
+  document.getElementById('eventDetailBody').innerHTML = `
+    <div class="detail-hero">
+      <div class="tags"><span class="eyebrow-tag" style="color:${ac};">${e.type}</span><span class="eyebrow-tag" style="color:var(--dim);">${e.category}</span><span class="eyebrow-tag" style="color:var(--dim);">${e.skill}</span></div>
+      <h1>${e.title}</h1><div class="loc">${e.venue} · ${e.city}, ${e.state}, ${e.country}</div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="card"><h4>About this event</h4><p>${e.desc}</p></div>
+        <div class="card"><h4>Event details</h4><div class="meta-list">
+          <div class="meta-item"><span>Date</span><b>${e.date}</b></div>
+          <div class="meta-item"><span>Registration Deadline</span><b>${e.deadline}</b></div>
+          <div class="meta-item"><span>Capacity</span><b>${e.capacity}</b></div>
+          <div class="meta-item prize"><span>Prize</span><b>${e.prize}</b></div></div></div>
+        <div class="card"><h4>Judges</h4><div class="people-row">${e.judges.map(j=>`<div class="people-chip"><span class="avatar" style="background:${accentFor(j)};">${j.charAt(0)}</span>${j}</div>`).join('')}</div></div>
+        <div class="card"><h4>Guest Artists</h4><div class="people-row">${e.guests.map(j=>`<div class="people-chip"><span class="avatar" style="background:${accentFor(j)};">${j.charAt(0)}</span>${j}</div>`).join('')}</div></div>
+        <div class="card"><h4>Event Schedule</h4><div class="timeline">${e.schedule.map(s=>`<div class="tl-item"><span class="tl-time">${s.t}</span><b>${s.i}</b></div>`).join('')}</div></div>
+        <div class="card"><h4>Sponsors &amp; Partners</h4><div class="sponsor-row">${e.sponsors.map(s=>`<span class="sponsor-chip">${s}</span>`).join('')}</div></div>
+        <div class="card"><h4>Rules &amp; Guidelines</h4><ul class="rules-list">${e.rules.map(r=>`<li>${r}</li>`).join('')}</ul></div>
+      </div>
+      <div>
+        <div class="card"><div class="fee-badge"><span>Registration Fee</span><b>${e.fee}</b></div>
+          <h4>Register now</h4>
+          <form class="reg-form" onsubmit="submitReg(event)">
+            <label>Full name</label><input type="text" required>
+            <label>Email</label><input type="email" required>
+            <label>Phone</label><input type="tel">
+            <label>Skill Level</label><select><option>Beginner</option><option>Intermediate</option><option selected>Advanced / Pro</option></select>
+            <button type="submit" class="btn btn-solid">Complete Registration</button>
+            <div class="confirm-banner" id="regConfirm">✓ You're registered! A confirmation has been sent to your email.</div>
+          </form></div>
+        <div class="card org-card"><span class="avatar" style="background:${ac};width:44px;height:44px;font-size:16px;">${e.organizer.charAt(0)}</span>
+          <div><b>${e.organizer}</b><span>Organizer</span><span>${e.contact}</span></div></div>
+      </div>
+    </div>`;
+  goTo('event-detail');
+}
+function submitReg(ev){ ev.preventDefault(); document.getElementById('regConfirm').classList.add('show'); }
+
+/* ============ CLASSES ============ */
+function parseFee(fee){ const m=String(fee).replace(/[^0-9]/g,''); return m?parseInt(m):0; }
+function initClassesFilters(){
+  document.getElementById('clArtForm').innerHTML = ART_FORMS.map(a=>`<button class="chip" data-a="${a}">${a}</button>`).join('');
+  document.getElementById('clMode').innerHTML = ["Online","Offline","Hybrid"].map(m=>`<button class="chip" data-m="${m}">${m}</button>`).join('');
+  const citySel=document.getElementById('clCity');
+  [...new Set(CLASSES.map(c=>c.city))].forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;citySel.appendChild(o);});
+  document.querySelectorAll('#clArtForm .chip').forEach(chip=>chip.addEventListener('click',()=>{chip.classList.toggle('on');const a=chip.dataset.a;activeClArtForm.has(a)?activeClArtForm.delete(a):activeClArtForm.add(a);renderClasses();}));
+  document.querySelectorAll('#clMode .chip').forEach(chip=>chip.addEventListener('click',()=>{chip.classList.toggle('on');const m=chip.dataset.m;activeClMode.has(m)?activeClMode.delete(m):activeClMode.add(m);renderClasses();}));
+  document.getElementById('clSkill').addEventListener('change', renderClasses);
+  document.getElementById('clCity').addEventListener('change', renderClasses);
+  document.getElementById('clSearch').addEventListener('input', renderClasses);
+  document.getElementById('clClearFilters').addEventListener('click', ()=>{
+    activeClArtForm.clear(); activeClMode.clear();
+    document.querySelectorAll('#clArtForm .chip, #clMode .chip').forEach(c=>c.classList.remove('on'));
+    document.getElementById('clSkill').value=''; document.getElementById('clCity').value=''; document.getElementById('clSearch').value='';
+    renderClasses();
+  });
+}
+function renderClasses(){
+  const q=document.getElementById('clSearch').value.toLowerCase();
+  const skill=document.getElementById('clSkill').value, city=document.getElementById('clCity').value;
+  let list = CLASSES.filter(c=>{
+    if(c.status!=='approved'||c.suspended) return false;
+    if(activeClArtForm.size && !activeClArtForm.has(c.artForm)) return false;
+    if(activeClMode.size && !activeClMode.has(c.mode)) return false;
+    if(skill && c.skill!==skill) return false;
+    if(city && c.city!==city) return false;
+    if(q && !(c.title.toLowerCase().includes(q)||c.instructor.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  document.getElementById('clCount').textContent = `${list.length} class${list.length!==1?'es':''} found`;
+  document.getElementById('clGrid').innerHTML = list.map(c=>{
+    const ac=accentFor(c.artForm);
+    return `<div class="plate-card" onclick="openClass(${c.id})">
+      <div class="accent-bar" style="background:linear-gradient(150deg,${ac}55,${ac}22);">
+        <span class="eyebrow-tag" style="background:${ac};color:#fff;padding:5px 11px;border-radius:999px;font-size:9.5px;">${c.artForm}</span>
+        <span class="bk-icon" onclick="event.stopPropagation();">♡</span>
+      </div>
+      <div class="plate-body">
+        <div class="plate-tags"><span style="color:${ac};">${c.mode}</span><span style="color:var(--dim);">· ${c.skill}</span></div>
+        <h3>${c.title}</h3>
+        <div class="plate-meta"><span>by <b>${c.instructor}</b></span><span>${c.city}</span><span>${c.schedule}</span></div>
+        <div class="plate-foot"><span class="prize-tag">${c.fees}</span><span class="view-link">View →</span></div>
+      </div>
+    </div>`;
+  }).join('') || `<p style="color:var(--dim);">No classes match your filters yet — try clearing a few.</p>`;
+  initTilt('#clGrid .plate-card');
+}
+function openClass(id){
+  const c=CLASSES.find(x=>x.id===id); const ac=accentFor(c.artForm);
+  document.getElementById('classDetailBody').innerHTML = `
+    <div class="detail-hero">
+      <div class="tags"><span class="eyebrow-tag" style="color:${ac};">${c.artForm}</span><span class="eyebrow-tag" style="color:var(--dim);">${c.mode}</span><span class="eyebrow-tag" style="color:var(--dim);">${c.skill}</span></div>
+      <h1>${c.title}</h1><div class="loc">by ${c.instructor} · ${c.mode==='Online'?'Online':c.venue+', '+c.city}</div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="card"><h4>Course description</h4><p>${c.desc}</p></div>
+        <div class="card"><h4>Class details</h4><div class="meta-list">
+          <div class="meta-item"><span>Duration</span><b>${c.duration}</b></div>
+          <div class="meta-item"><span>Schedule</span><b>${c.schedule}</b></div>
+          <div class="meta-item"><span>Batch</span><b>${c.batch}</b></div>
+          <div class="meta-item"><span>Seats Available</span><b>${c.seats}</b></div></div></div>
+      </div>
+      <div>
+        <div class="card"><div class="fee-badge"><span>Course Fee</span><b>${c.fees}</b></div>
+          <h4>Register now</h4>
+          <form class="reg-form" onsubmit="submitClassReg(event)">
+            <label>Full name</label><input type="text" required>
+            <label>Email</label><input type="email" required>
+            <label>Phone</label><input type="tel">
+            <button type="submit" class="btn btn-solid">Complete Registration</button>
+            <div class="confirm-banner" id="classRegConfirm">✓ You're registered! Instructor contact details have been sent to your email.</div>
+          </form></div>
+        <div class="card org-card"><span class="avatar" style="background:${ac};width:44px;height:44px;font-size:16px;">${c.instructor.charAt(0)}</span>
+          <div><b>${c.instructor}</b><span>Instructor</span><span>${c.contact}</span></div></div>
+      </div>
+    </div>`;
+  goTo('class-detail');
+}
+function submitClassReg(ev){ ev.preventDefault(); document.getElementById('classRegConfirm').classList.add('show'); }
+
+/* ============ DIRECTORY ============ */
+function initDirectory(){
+  document.getElementById('disciplineChips').innerHTML = DISCIPLINES.map(d=>`<button class="chip" data-disc="${d}">${d}</button>`).join('');
+  document.querySelectorAll('#disciplineChips .chip').forEach(chip=>chip.addEventListener('click',()=>{chip.classList.toggle('on');const d=chip.dataset.disc;activeDisciplines.has(d)?activeDisciplines.delete(d):activeDisciplines.add(d);renderArtists();}));
+  document.getElementById('sortSelect').addEventListener('change', renderArtists);
+}
+function renderArtists(){
+  let list = ARTISTS.filter(a=>{
+    if(a.status!=='approved'||a.suspended) return false;
+    if(activeDisciplines.size && !a.disciplines.some(d=>activeDisciplines.has(d))) return false;
+    return true;
+  });
+  const sort=document.getElementById('sortSelect').value;
+  if(sort==='az') list.sort((a,b)=>a.name.localeCompare(b.name));
+  if(sort==='za') list.sort((a,b)=>b.name.localeCompare(a.name));
+  if(sort==='events') list.sort((a,b)=>b.events-a.events);
+  if(sort==='exp') list.sort((a,b)=>b.exp-a.exp);
+  document.getElementById('artCount').textContent = `${list.length} artist${list.length!==1?'s':''}`;
+  document.getElementById('artGrid').innerHTML = list.map(a=>{
+    const ac=accentFor(a.disciplines[0]); const inShort=shortlist.includes(a.id);
+    return `<div class="art-card">
+      <div class="art-plate" onclick="openArtist(${a.id})">
+        <span class="bk-icon" onclick="event.stopPropagation();toggleShortlist(${a.id});renderArtists();">${inShort?'♥':'♡'}</span>
+        <span class="ghost-init">${a.name.split(' ').map(n=>n[0]).join('')}</span>
+        ${a.verified?'<span class="verified">✓ VERIFIED</span>':''}
+        <span class="corner-tag" style="color:${ac};">${a.disciplines[0]}</span>
+      </div>
+      <div class="art-info">
+        <h4 onclick="openArtist(${a.id})">${a.name}</h4>
+        <div class="city">${a.city}</div>
+        <div class="art-tags">${a.disciplines.map(d=>`<span>${d}</span>`).join('')}</div>
+        <div class="art-actions">
+          <button class="select-btn ${inShort?'added':''}" onclick="toggleShortlist(${a.id})">${inShort?'✓ Saved':'+ Save'}</button>
+          <button class="view-btn" onclick="openArtist(${a.id})">View Profile</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  initTilt('#artGrid .art-card');
+  initMediaDistort('#artGrid .art-plate');
+}
+function openArtist(id){
+  const a=ARTISTS.find(x=>x.id===id); const ac=accentFor(a.disciplines[0]); const inShort=shortlist.includes(a.id);
+  document.getElementById('artistProfileBody').innerHTML = `
+    <div class="profile-hero">
+      <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+        <div class="profile-avatar">${a.name.split(' ').map(n=>n[0]).join('')}</div>
+        <div>
+          <h1>${a.name} ${a.verified?'<span style="color:var(--yellow);font-size:.6em;vertical-align:middle;">✓</span>':''}</h1>
+          <div class="sub">${a.disciplines.join(' · ')} — ${a.city}</div>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-solid" onclick="openBookForm(${a.id})">Book Now</button>
+        <button class="btn" onclick="toggleShortlist(${a.id});openArtist(${a.id});">${inShort?'♥ Saved':'♡ Save'}</button>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="ps"><b>${a.exp}</b><span>Years Experience</span></div>
+      <div class="ps"><b>${a.events}</b><span>Events</span></div>
+      <div class="ps"><b>${a.achievements.length}</b><span>Achievements</span></div>
+      <div class="ps"><b>${a.verified?'Yes':'Pending'}</b><span>Verified</span></div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="card"><h4>About</h4><p>${a.bio}</p></div>
+        <div class="card"><h4>Specialization</h4><p>${a.specialization}</p></div>
+        <div class="card"><h4>Portfolio</h4><div class="port-grid">${Array.from({length:6}).map((_,i)=>`<div class="port-tile">${i%2===0?'PHOTO':'VIDEO'}</div>`).join('')}</div></div>
+        <div class="card"><h4>Achievements</h4><ul class="ach-list">${a.achievements.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      </div>
+      <div>
+        <div class="card"><h4>Connect</h4><div class="social-row"><a href="#">Instagram ${a.social.ig}</a></div></div>
+        <div class="card">
+          <button class="btn btn-solid" style="width:100%;justify-content:center;margin-bottom:10px;" onclick="openBookForm(${a.id})">Book This Artist</button>
+          <button class="select-btn ${inShort?'added':''}" style="width:100%;padding:12px;border-radius:999px;" onclick="toggleShortlist(${a.id});openArtist(${a.id});">${inShort?'✓ Saved':'+ Save to Shortlist'}</button>
+        </div>
+      </div>
+    </div>`;
+  goTo('artist-profile');
+}
+function openBookForm(artistId){
+  bookingArtistId=artistId;
+  const a=ARTISTS.find(x=>x.id===artistId);
+  const nameEl=document.getElementById('bookArtistName');
+  delete nameEl.dataset.scrambled;
+  nameEl.textContent = a.name;
+  document.getElementById('bookConfirm').classList.remove('show');
+  document.getElementById('bookForm').reset();
+  goTo('book-artist');
+}
+document.getElementById('bookForm').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  BOOKING_REQUESTS.push({
+    id:bookingReqId++, artistId:bookingArtistId,
+    company:document.getElementById('bk_company').value, contact:document.getElementById('bk_contact').value,
+    email:document.getElementById('bk_email').value, phone:document.getElementById('bk_phone').value,
+    project:document.getElementById('bk_project').value, city:document.getElementById('bk_city').value,
+    date:document.getElementById('bk_date').value, budget:document.getElementById('bk_budget').value,
+    requirements:document.getElementById('bk_requirements').value, status:'pending',
+  });
+  document.getElementById('bookConfirm').classList.add('show');
+});
+
+/* ============ SHORTLIST / DRAWER ============ */
+function toggleShortlist(id){
+  const idx=shortlist.indexOf(id); if(idx>-1) shortlist.splice(idx,1); else shortlist.push(id);
+  updateCartBadge(); renderArtists(); renderShortlistPanels();
+}
+function updateCartBadge(){ document.getElementById('cartBadge').textContent = shortlist.length; }
+function renderShortlistPanels(){
+  const items = shortlist.map(id=>ARTISTS.find(a=>a.id===id)).filter(Boolean);
+  document.getElementById('drawerBody').innerHTML = items.length ? items.map(a=>`
+    <div class="shortlist-item"><span class="avatar" style="background:${accentFor(a.disciplines[0])};">${a.name.split(' ').map(n=>n[0]).join('')}</span><b>${a.name}</b><button class="rm" onclick="toggleShortlist(${a.id})">✕</button></div>`).join('')
+    : `<div class="empty-note">No artists saved yet. Browse the directory to add some.</div>`;
+}
+function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
+function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
+document.getElementById('cartBtn').addEventListener('click', openDrawer);
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
+
+/* ============ PORTAL / SESSION ============ */
+function renderPortalArea(){
+  const el=document.getElementById('portalArea');
+  if(session.role==='organizer'){
+    const org=ORGANIZERS.find(o=>o.id===session.organizerId);
+    el.innerHTML = `<div class="session-chip" onclick="goTo('organizer-dashboard')"><span class="avatar" style="background:${YELLOW};">${org?org.name.charAt(0):'O'}</span>${org?org.name.split(' ')[0]:'Organizer'}</div>`;
+  } else if(session.role==='instructor'){
+    const ins=INSTRUCTORS.find(o=>o.id===session.instructorId);
+    el.innerHTML = `<div class="session-chip" onclick="goTo('instructor-dashboard')"><span class="avatar" style="background:${TEAL};">${ins?ins.name.charAt(0):'I'}</span>${ins?ins.name.split(' ')[0]:'Instructor'}</div>`;
+  } else if(session.role==='artist'){
+    const art=ARTISTS.find(a=>a.id===session.artistId);
+    el.innerHTML = `<div class="session-chip" onclick="goTo('artist-dashboard')"><span class="avatar" style="background:${ROSE};">${art?art.name.charAt(0):'A'}</span>${art?art.name.split(' ')[0]:'Artist'}</div>`;
+  } else if(session.role==='admin'){
+    el.innerHTML = `<div class="session-chip" onclick="goTo('admin-dashboard')"><span class="avatar" style="background:var(--paper);color:var(--ink);">A</span>Admin</div>`;
+  } else {
+    el.innerHTML = `<button class="portal-btn" onclick="togglePortalMenu(event)">Portal Login ▾</button>
+      <div class="portal-menu" id="portalMenu">
+        <button onclick="goTo('organizer-auth');closePortalMenu();">Organizer Portal<span>Register &amp; list events</span></button>
+        <button onclick="goTo('instructor-auth');closePortalMenu();">Instructor Portal<span>List classes &amp; workshops</span></button>
+        <button onclick="goTo('artist-auth');closePortalMenu();">Artist Portal<span>Build your portfolio</span></button>
+        <hr>
+        <button onclick="goTo('admin-login');closePortalMenu();">Admin Panel<span>Platform control</span></button>
+      </div>`;
+  }
+}
+function togglePortalMenu(ev){ if(ev) ev.stopPropagation(); const m=document.getElementById('portalMenu'); if(m) m.classList.toggle('open'); }
+function closePortalMenu(){ const m=document.getElementById('portalMenu'); if(m) m.classList.remove('open'); }
+document.addEventListener('click', e=>{ if(!e.target.closest('#portalArea')) closePortalMenu(); });
+function logoutSession(){ session={role:null,organizerId:null,instructorId:null,artistId:null}; renderPortalArea(); goTo('home'); }
+
+/* ============ ORGANIZER PORTAL ============ */
+document.getElementById('organizerRegForm').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  const id=ORGANIZERS.length?Math.max(...ORGANIZERS.map(o=>o.id))+1:1;
+  ORGANIZERS.push({id,name:document.getElementById('orgName').value,email:document.getElementById('orgEmail').value,phone:document.getElementById('orgPhone').value,city:document.getElementById('orgCity').value});
+  session.role='organizer'; session.organizerId=id; renderPortalArea(); goTo('organizer-dashboard');
+});
+function renderOrganizerDashboard(){
+  const org=ORGANIZERS.find(o=>o.id===session.organizerId);
+  document.getElementById('orgDashName').textContent = org?`Welcome, ${org.name}`:'Organizer Dashboard';
+  const mine=EVENTS.filter(e=>e.organizerId===session.organizerId);
+  document.getElementById('orgStats').innerHTML = `
+    <div class="dash-stat"><b>${mine.length}</b><span>Total Events</span></div>
+    <div class="dash-stat"><b>${mine.filter(e=>e.status==='pending').length}</b><span>Pending Review</span></div>
+    <div class="dash-stat"><b>${mine.filter(e=>e.status==='approved').length}</b><span>Approved</span></div>
+    <div class="dash-stat"><b>${mine.filter(e=>e.status==='rejected').length}</b><span>Rejected</span></div>`;
+  document.getElementById('orgEventsList').innerHTML = mine.length ? mine.map(e=>`
+    <div class="item-row"><div class="info"><b>${e.title}</b><span>${e.date||'—'} · ${e.city||'—'} · ${e.type} / ${e.category}</span></div>
+    <div class="actions"><span class="badge ${e.status}">${e.status}</span><button class="btn-edit" onclick="openEventForm(${e.id})">Edit</button></div></div>`).join('')
+    : `<div class="empty-state">You haven't listed any events yet. Click "+ Create New Event" to get started.</div>`;
+  populatePromoSelectors();
+  document.getElementById('pkgList').innerHTML = PROMO_PACKAGES.map(p=>`<div class="pkg-card"><div><b>${p.name}</b><span>${p.desc}</span></div><span class="price">${p.price}</span></div>`).join('');
+  const myPromos=PROMOTION_REQUESTS.filter(p=>p.organizerId===session.organizerId);
+  document.getElementById('orgPromoList').innerHTML = myPromos.length ? myPromos.map(p=>{
+    const ev=EVENTS.find(e=>e.id===p.eventId), pkg=PROMO_PACKAGES.find(k=>k.id===p.packageId);
+    return `<div class="item-row"><div class="info"><b>${ev?ev.title:'—'}</b><span>${pkg?pkg.name:''}</span></div><span class="badge ${p.status}">${p.status}</span></div>`;
+  }).join('') : `<div class="empty-state">No promotion requests yet.</div>`;
+}
+function populatePromoSelectors(){
+  const evSel=document.getElementById('promoEventSelect');
+  const myApproved=EVENTS.filter(e=>e.organizerId===session.organizerId && e.status==='approved');
+  evSel.innerHTML = myApproved.length ? myApproved.map(e=>`<option value="${e.id}">${e.title}</option>`).join('') : `<option value="">No approved events yet</option>`;
+  document.getElementById('promoPackageSelect').innerHTML = PROMO_PACKAGES.map(p=>`<option value="${p.id}">${p.name} — ${p.price}</option>`).join('');
+}
+function requestPromotion(){
+  const eventId=parseInt(document.getElementById('promoEventSelect').value);
+  const packageId=document.getElementById('promoPackageSelect').value;
+  if(!eventId){ alert('You need at least one approved event before requesting a promotion.'); return; }
+  PROMOTION_REQUESTS.push({id:promoReqId++,organizerId:session.organizerId,eventId,packageId,status:'pending'});
+  renderOrganizerDashboard();
+}
+function openEventForm(id){
+  editingEventId=id;
+  document.getElementById('eventFormTitle').textContent = id?'Edit Event':'Create Event';
+  document.getElementById('eventFormConfirm').classList.remove('show');
+  document.getElementById('scheduleRows').innerHTML=''; scheduleRowCount=0;
+  document.getElementById('eventForm').reset();
+  if(id){
+    const e=EVENTS.find(x=>x.id===id);
+    document.getElementById('ef_title').value=e.title||''; document.getElementById('ef_type').value=e.type||'Battle';
+    document.getElementById('ef_desc').value=e.desc||''; document.getElementById('ef_category').value=e.category||'Dance';
+    document.getElementById('ef_skill').value=e.skill||'All Levels'; document.getElementById('ef_date').value=e.date||'';
+    document.getElementById('ef_deadline').value=e.deadline||''; document.getElementById('ef_venue').value=e.venue||'';
+    document.getElementById('ef_location').value=[e.city,e.state,e.country].filter(Boolean).join(', ');
+    document.getElementById('ef_fee').value=e.fee||''; document.getElementById('ef_prize').value=e.prize||'';
+    document.getElementById('ef_capacity').value=e.capacity||''; document.getElementById('ef_contact').value=e.contact||'';
+    document.getElementById('ef_judges').value=(e.judges||[]).join(', '); document.getElementById('ef_guests').value=(e.guests||[]).join(', ');
+    document.getElementById('ef_sponsors').value=(e.sponsors||[]).join(', '); document.getElementById('ef_rules').value=(e.rules||[]).join('\n');
+    (e.schedule&&e.schedule.length?e.schedule:[{t:'',i:''}]).forEach(s=>addScheduleRow(s.t,s.i));
+  } else { addScheduleRow(); }
+  goTo('organizer-event-form');
+}
+function addScheduleRow(time='',item=''){
+  scheduleRowCount++; const rid='sr_'+scheduleRowCount;
+  const div=document.createElement('div'); div.className='dyn-row'; div.id=rid;
+  div.innerHTML = `<input type="text" placeholder="Time e.g. 5:00 PM" value="${time}" class="sched-time" style="max-width:140px;">
+    <input type="text" placeholder="Schedule item" value="${item}" class="sched-item">
+    <button type="button" class="rm-row" onclick="document.getElementById('${rid}').remove()">✕</button>`;
+  document.getElementById('scheduleRows').appendChild(div);
+}
+document.getElementById('eventForm').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  const locParts=document.getElementById('ef_location').value.split(',').map(s=>s.trim());
+  const schedule=Array.from(document.querySelectorAll('#scheduleRows .dyn-row')).map(row=>({t:row.querySelector('.sched-time').value,i:row.querySelector('.sched-item').value})).filter(s=>s.t||s.i);
+  const org=ORGANIZERS.find(o=>o.id===session.organizerId);
+  const data={
+    title:document.getElementById('ef_title').value, type:document.getElementById('ef_type').value, desc:document.getElementById('ef_desc').value,
+    category:document.getElementById('ef_category').value, skill:document.getElementById('ef_skill').value, date:document.getElementById('ef_date').value,
+    deadline:document.getElementById('ef_deadline').value, venue:document.getElementById('ef_venue').value,
+    city:locParts[0]||'', state:locParts[1]||'', country:locParts[2]||'',
+    fee:document.getElementById('ef_fee').value, prize:document.getElementById('ef_prize').value, capacity:document.getElementById('ef_capacity').value,
+    contact:document.getElementById('ef_contact').value, organizer:org?org.name:'Organizer',
+    judges:document.getElementById('ef_judges').value.split(',').map(s=>s.trim()).filter(Boolean),
+    guests:document.getElementById('ef_guests').value.split(',').map(s=>s.trim()).filter(Boolean),
+    sponsors:document.getElementById('ef_sponsors').value.split(',').map(s=>s.trim()).filter(Boolean),
+    rules:document.getElementById('ef_rules').value.split('\n').map(s=>s.trim()).filter(Boolean), schedule,
+  };
+  if(editingEventId){ const e=EVENTS.find(x=>x.id===editingEventId); Object.assign(e,data); e.status='pending'; e.promoted=false; }
+  else { const newId=Math.max(0,...EVENTS.map(e=>e.id))+1; EVENTS.push({id:newId,...data,status:'pending',suspended:false,organizerId:session.organizerId,promoted:false}); }
+  document.getElementById('eventFormConfirm').classList.add('show');
+  setTimeout(()=>goTo('organizer-dashboard'), 900);
+});
+
+/* ============ INSTRUCTOR PORTAL ============ */
+document.getElementById('instructorRegForm').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  const id=INSTRUCTORS.length?Math.max(...INSTRUCTORS.map(o=>o.id))+1:1;
+  INSTRUCTORS.push({id,name:document.getElementById('insName').value,email:document.getElementById('insEmail').value,phone:document.getElementById('insPhone').value,city:document.getElementById('insCity').value,artForm:document.getElementById('insArtForm').value});
+  session.role='instructor'; session.instructorId=id; renderPortalArea(); goTo('instructor-dashboard');
+});
+function renderInstructorDashboard(){
+  const ins=INSTRUCTORS.find(o=>o.id===session.instructorId);
+  document.getElementById('insDashName').textContent = ins?`Welcome, ${ins.name}`:'Instructor Dashboard';
+  const mine=CLASSES.filter(c=>c.instructorId===session.instructorId);
+  document.getElementById('insStats').innerHTML = `
+    <div class="dash-stat"><b>${mine.length}</b><span>Total Classes</span></div>
+    <div class="dash-stat"><b>${mine.filter(c=>c.status==='pending').length}</b><span>Pending Review</span></div>
+    <div class="dash-stat"><b>${mine.filter(c=>c.status==='approved').length}</b><span>Approved</span></div>
+    <div class="dash-stat"><b>${mine.filter(c=>c.status==='rejected').length}</b><span>Rejected</span></div>`;
+  document.getElementById('insClassesList').innerHTML = mine.length ? mine.map(c=>`
+    <div class="item-row"><div class="info"><b>${c.title}</b><span>${c.artForm} · ${c.mode} · ${c.city||'—'}</span></div>
+    <div class="actions"><span class="badge ${c.status}">${c.status}</span><button class="btn-edit" onclick="openClassForm(${c.id})">Edit</button></div></div>`).join('')
+    : `<div class="empty-state">You haven't listed any classes yet. Click "+ Create New Class" to get started.</div>`;
+}
+function openClassForm(id){
+  editingClassId=id;
+  document.getElementById('classFormTitle').textContent = id?'Edit Class':'Create Class';
+  document.getElementById('classFormConfirm').classList.remove('show');
+  document.getElementById('classForm').reset();
+  const ins=INSTRUCTORS.find(o=>o.id===session.instructorId);
+  if(id){
+    const c=CLASSES.find(x=>x.id===id);
+    document.getElementById('cf_title').value=c.title||''; document.getElementById('cf_instructor').value=c.instructor||(ins?ins.name:'');
+    document.getElementById('cf_desc').value=c.desc||''; document.getElementById('cf_artform').value=c.artForm||'Dance';
+    document.getElementById('cf_skill').value=c.skill||'Beginner'; document.getElementById('cf_mode').value=c.mode||'Offline';
+    document.getElementById('cf_location').value=[c.city,c.country].filter(Boolean).join(', ');
+    document.getElementById('cf_venue').value=c.venue||''; document.getElementById('cf_duration').value=c.duration||'';
+    document.getElementById('cf_schedule').value=c.schedule||''; document.getElementById('cf_batch').value=c.batch||'';
+    document.getElementById('cf_fees').value=c.fees||''; document.getElementById('cf_seats').value=c.seats||'';
+    document.getElementById('cf_contact').value=c.contact||'';
+  } else {
+    document.getElementById('cf_instructor').value = ins?ins.name:'';
+  }
+  goTo('instructor-class-form');
+}
+document.getElementById('classForm').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  const locParts=document.getElementById('cf_location').value.split(',').map(s=>s.trim());
+  const data={
+    title:document.getElementById('cf_title').value, instructor:document.getElementById('cf_instructor').value,
+    desc:document.getElementById('cf_desc').value, artForm:document.getElementById('cf_artform').value, skill:document.getElementById('cf_skill').value,
+    mode:document.getElementById('cf_mode').value, city:locParts[0]||'', country:locParts[1]||'',
+    venue:document.getElementById('cf_venue').value, duration:document.getElementById('cf_duration').value,
+    schedule:document.getElementById('cf_schedule').value, batch:document.getElementById('cf_batch').value,
+    fees:document.getElementById('cf_fees').value, seats:document.getElementById('cf_seats').value, contact:document.getElementById('cf_contact').value,
+  };
+  if(editingClassId){ const c=CLASSES.find(x=>x.id===editingClassId); Object.assign(c,data); c.status='pending'; }
+  else { const newId=Math.max(0,...CLASSES.map(c=>c.id))+1; CLASSES.push({id:newId,...data,status:'pending',suspended:false,instructorId:session.instructorId}); }
+  document.getElementById('classFormConfirm').classList.add('show');
+  setTimeout(()=>goTo('instructor-dashboard'), 900);
+});
+
+/* ============ ARTIST PORTAL ============ */
+function renderDisciplineChips(containerId, selected=[]){
+  document.getElementById(containerId).innerHTML = DISCIPLINES.map(d=>`<button type="button" class="chip ${selected.includes(d)?'on':''}" data-d="${d}" onclick="this.classList.toggle('on')">${d}</button>`).join('');
+}
+document.getElementById('artistRegForm').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  const disciplines=Array.from(document.querySelectorAll('#ar_disciplines .chip.on')).map(c=>c.dataset.d);
+  const newId=Math.max(0,...ARTISTS.map(a=>a.id))+1;
+  ARTISTS.push({id:newId,name:document.getElementById('ar_name').value,disciplines:disciplines.length?disciplines:['Dance'],
+    city:document.getElementById('ar_city').value,bio:document.getElementById('ar_bio').value,
+    specialization:'',achievements:[],events:0,exp:0,social:{ig:''},status:'pending',verified:false,suspended:false});
+  session.role='artist'; session.artistId=newId; renderPortalArea(); goTo('artist-dashboard');
+});
+function renderArtistDashboard(){
+  const a=ARTISTS.find(x=>x.id===session.artistId); if(!a) return;
+  document.getElementById('artDashName').textContent = `Welcome, ${a.name}`;
+  document.getElementById('artDashStatusLine').textContent = a.status==='pending' ? 'Your profile is pending admin review.' : a.status==='rejected' ? 'Your last submission was rejected — edit and resubmit.' : 'Your profile is live in the public directory.';
+  document.getElementById('artDashStats').innerHTML = `
+    <div class="dash-stat"><b>${a.events}</b><span>Events Played</span></div>
+    <div class="dash-stat"><b>${a.exp}</b><span>Years Active</span></div>
+    <div class="dash-stat" style="display:flex;align-items:center;"><span class="badge ${a.status}">${a.status}</span></div>`;
+  document.getElementById('artDashPreview').innerHTML = `
+    <div class="art-card" style="max-width:280px;"><div class="art-plate"><span class="ghost-init">${a.name.split(' ').map(n=>n[0]).join('')}</span></div>
+    <div class="art-info"><h4>${a.name}</h4><div class="city">${a.city||'—'}</div><div class="art-tags">${a.disciplines.map(d=>`<span>${d}</span>`).join('')}</div></div></div>`;
+  const bookings=BOOKING_REQUESTS.filter(b=>b.artistId===a.id);
+  document.getElementById('artDashBookings').innerHTML = bookings.length ? bookings.map(b=>`
+    <div class="item-row"><div class="info"><b>${b.company||'—'}</b><span>${b.project||'Project'} · ${b.city||'—'} · ${b.date||'—'}</span></div><span class="badge ${b.status}">${b.status}</span></div>`).join('')
+    : `<div class="empty-state">No booking requests yet.</div>`;
+}
+function openPortfolioForm(){
+  const a=ARTISTS.find(x=>x.id===session.artistId); if(!a) return;
+  document.getElementById('pf_name').value=a.name; document.getElementById('pf_city').value=a.city||'';
+  document.getElementById('pf_bio').value=a.bio||''; document.getElementById('pf_spec').value=a.specialization||'';
+  document.getElementById('pf_achievements').value=(a.achievements||[]).join('\n');
+  document.getElementById('pf_social').value=a.social?a.social.ig:'';
+  renderDisciplineChips('pf_disciplines', a.disciplines);
+  document.getElementById('portfolioFormConfirm').classList.remove('show');
+  goTo('artist-portfolio-form');
+}
+document.getElementById('portfolioForm').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  const a=ARTISTS.find(x=>x.id===session.artistId); if(!a) return;
+  a.name=document.getElementById('pf_name').value; a.city=document.getElementById('pf_city').value;
+  a.bio=document.getElementById('pf_bio').value; a.specialization=document.getElementById('pf_spec').value;
+  a.achievements=document.getElementById('pf_achievements').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  a.social={ig:document.getElementById('pf_social').value};
+  const disciplines=Array.from(document.querySelectorAll('#pf_disciplines .chip.on')).map(c=>c.dataset.d);
+  if(disciplines.length) a.disciplines=disciplines;
+  a.status='pending';
+  document.getElementById('portfolioFormConfirm').classList.add('show');
+  setTimeout(()=>goTo('artist-dashboard'), 900);
+});
+
+/* ============ ADMIN PANEL ============ */
+document.getElementById('adminLoginForm').addEventListener('submit', function(ev){ ev.preventDefault(); session.role='admin'; renderPortalArea(); goTo('admin-dashboard'); });
+document.querySelectorAll('#adminTabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#adminTabs button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+    document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+function renderAdminDashboard(){
+  const pendingEvents=EVENTS.filter(e=>e.status==='pending'), pendingClasses=CLASSES.filter(c=>c.status==='pending'), pendingArtists=ARTISTS.filter(a=>a.status==='pending');
+  const pendingPromos=PROMOTION_REQUESTS.filter(p=>p.status==='pending'), openBookings=BOOKING_REQUESTS.filter(b=>b.status==='pending'||b.status==='contacted');
+  document.getElementById('adminStats').innerHTML = `
+    <div class="dash-stat"><b>${EVENTS.length}</b><span>Total Events</span></div>
+    <div class="dash-stat"><b>${pendingEvents.length}</b><span>Pending Events</span></div>
+    <div class="dash-stat"><b>${CLASSES.length}</b><span>Total Classes</span></div>
+    <div class="dash-stat"><b>${pendingClasses.length}</b><span>Pending Classes</span></div>
+    <div class="dash-stat"><b>${ARTISTS.length}</b><span>Total Artists</span></div>
+    <div class="dash-stat"><b>${pendingArtists.length}</b><span>Pending Artists</span></div>
+    <div class="dash-stat"><b>${openBookings.length}</b><span>Open Booking Requests</span></div>
+    <div class="dash-stat"><b>${pendingPromos.length}</b><span>Promotion Requests</span></div>`;
+  document.getElementById('pendingEventsList').innerHTML = pendingEvents.length ? pendingEvents.map(e=>`
+    <div class="item-row"><div class="info"><b>${e.title}</b><span>${e.type} / ${e.category} · ${e.city||'—'} · ${e.date||'—'}</span></div>
+    <div class="actions"><button class="btn-approve" onclick="approveEvent(${e.id})">Approve</button><button class="btn-reject" onclick="rejectEvent(${e.id})">Reject</button></div></div>`).join('') : `<div class="empty-state">No events awaiting review.</div>`;
+  document.getElementById('pendingClassesList').innerHTML = pendingClasses.length ? pendingClasses.map(c=>`
+    <div class="item-row"><div class="info"><b>${c.title}</b><span>${c.artForm} · ${c.mode} · ${c.city||'—'}</span></div>
+    <div class="actions"><button class="btn-approve" onclick="approveClass(${c.id})">Approve</button><button class="btn-reject" onclick="rejectClass(${c.id})">Reject</button></div></div>`).join('') : `<div class="empty-state">No classes awaiting review.</div>`;
+  document.getElementById('pendingArtistsList').innerHTML = pendingArtists.length ? pendingArtists.map(a=>`
+    <div class="item-row"><div class="info"><b>${a.name}</b><span>${a.disciplines.join(', ')} · ${a.city||'—'}</span></div>
+    <div class="actions"><button class="btn-approve" onclick="approveArtist(${a.id})">Approve</button><button class="btn-reject" onclick="rejectArtist(${a.id})">Reject</button></div></div>`).join('') : `<div class="empty-state">No artist profiles awaiting review.</div>`;
+  document.getElementById('bookingRequestsList').innerHTML = BOOKING_REQUESTS.length ? BOOKING_REQUESTS.slice().reverse().map(b=>{
+    const artist=ARTISTS.find(a=>a.id===b.artistId);
+    let actions='';
+    if(b.status==='pending') actions=`<button class="btn-neutral" onclick="advanceBooking(${b.id},'contacted')">Mark Contacted</button><button class="btn-reject" onclick="advanceBooking(${b.id},'declined')">Decline</button>`;
+    else if(b.status==='contacted') actions=`<button class="btn-approve" onclick="advanceBooking(${b.id},'confirmed')">Confirm Booking</button><button class="btn-reject" onclick="advanceBooking(${b.id},'declined')">Decline</button>`;
+    else actions=`<span class="badge ${b.status}">${b.status}</span>`;
+    return `<div class="item-row"><div class="info"><b>${b.company||'—'} → ${artist?artist.name:'—'}</b><span>${b.contact||''} · ${b.email||''} · ${b.project||'Project'} · ${b.city||'—'}</span></div><div class="actions">${actions}</div></div>`;
+  }).join('') : `<div class="empty-state">No booking requests yet.</div>`;
+  document.getElementById('promoRequestsList').innerHTML = PROMOTION_REQUESTS.length ? PROMOTION_REQUESTS.map(p=>{
+    const ev=EVENTS.find(e=>e.id===p.eventId), pkg=PROMO_PACKAGES.find(k=>k.id===p.packageId), org=ORGANIZERS.find(o=>o.id===p.organizerId);
+    return `<div class="item-row"><div class="info"><b>${ev?ev.title:'—'}</b><span>${org?org.name:''} · ${pkg?pkg.name:''} (${pkg?pkg.price:''})</span></div>
+    <div class="actions">${p.status==='pending' ? `<button class="btn-approve" onclick="approvePromo(${p.id})">Approve</button><button class="btn-reject" onclick="rejectPromo(${p.id})">Reject</button>` : `<span class="badge ${p.status}">${p.status}</span>`}</div></div>`;
+  }).join('') : `<div class="empty-state">No promotion requests yet.</div>`;
+  renderAllEventsTable(); renderAllClassesTable(); renderAllArtistsTable();
+}
+function approveEvent(id){ EVENTS.find(x=>x.id===id).status='approved'; renderAdminDashboard(); renderEvents(); initTicker(); }
+function rejectEvent(id){ EVENTS.find(x=>x.id===id).status='rejected'; renderAdminDashboard(); renderEvents(); }
+function approveClass(id){ CLASSES.find(x=>x.id===id).status='approved'; renderAdminDashboard(); renderClasses(); }
+function rejectClass(id){ CLASSES.find(x=>x.id===id).status='rejected'; renderAdminDashboard(); renderClasses(); }
+function approveArtist(id){ ARTISTS.find(x=>x.id===id).status='approved'; renderAdminDashboard(); renderArtists(); }
+function rejectArtist(id){ ARTISTS.find(x=>x.id===id).status='rejected'; renderAdminDashboard(); renderArtists(); }
+function advanceBooking(id,status){ BOOKING_REQUESTS.find(b=>b.id===id).status=status; renderAdminDashboard(); }
+function approvePromo(id){ const p=PROMOTION_REQUESTS.find(x=>x.id===id); p.status='approved'; const e=EVENTS.find(x=>x.id===p.eventId); if(e) e.promoted=true; renderAdminDashboard(); renderEvents(); }
+function rejectPromo(id){ PROMOTION_REQUESTS.find(x=>x.id===id).status='rejected'; renderAdminDashboard(); }
+function toggleSuspendEvent(id){ const e=EVENTS.find(x=>x.id===id); e.suspended=!e.suspended; renderAdminDashboard(); renderEvents(); }
+function toggleSuspendClass(id){ const c=CLASSES.find(x=>x.id===id); c.suspended=!c.suspended; renderAdminDashboard(); renderClasses(); }
+function toggleSuspendArtist(id){ const a=ARTISTS.find(x=>x.id===id); a.suspended=!a.suspended; renderAdminDashboard(); renderArtists(); }
+function toggleVerifyArtist(id){ const a=ARTISTS.find(x=>x.id===id); a.verified=!a.verified; renderAdminDashboard(); renderArtists(); }
+function renderAllEventsTable(){
+  document.getElementById('allEventsTable').innerHTML = `<table class="data-table"><thead><tr><th>Title</th><th>City</th><th>Status</th><th>Promoted</th><th>Actions</th></tr></thead><tbody>
+    ${EVENTS.map(e=>`<tr><td>${e.title}</td><td>${e.city||'—'}</td><td><span class="badge ${e.suspended?'suspended':e.status}">${e.suspended?'suspended':e.status}</span></td><td>${e.promoted?'★ Yes':'—'}</td>
+    <td class="actions">${e.status==='pending'?`<button class="btn-approve" onclick="approveEvent(${e.id})">Approve</button>`:''}<button class="btn-suspend" onclick="toggleSuspendEvent(${e.id})">${e.suspended?'Unsuspend':'Suspend'}</button></td></tr>`).join('')}
+  </tbody></table>`;
+}
+function renderAllClassesTable(){
+  document.getElementById('allClassesTable').innerHTML = `<table class="data-table"><thead><tr><th>Title</th><th>Instructor</th><th>City</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    ${CLASSES.map(c=>`<tr><td>${c.title}</td><td>${c.instructor}</td><td>${c.city||'—'}</td><td><span class="badge ${c.suspended?'suspended':c.status}">${c.suspended?'suspended':c.status}</span></td>
+    <td class="actions">${c.status==='pending'?`<button class="btn-approve" onclick="approveClass(${c.id})">Approve</button>`:''}<button class="btn-suspend" onclick="toggleSuspendClass(${c.id})">${c.suspended?'Unsuspend':'Suspend'}</button></td></tr>`).join('')}
+  </tbody></table>`;
+}
+function renderAllArtistsTable(){
+  document.getElementById('allArtistsTable').innerHTML = `<table class="data-table"><thead><tr><th>Name</th><th>City</th><th>Status</th><th>Verified</th><th>Actions</th></tr></thead><tbody>
+    ${ARTISTS.map(a=>`<tr><td>${a.name}</td><td>${a.city||'—'}</td><td><span class="badge ${a.suspended?'suspended':a.status}">${a.suspended?'suspended':a.status}</span></td><td>${a.verified?'✓':'—'}</td>
+    <td class="actions">${a.status==='pending'?`<button class="btn-approve" onclick="approveArtist(${a.id})">Approve</button>`:''}<button class="btn-suspend" onclick="toggleVerifyArtist(${a.id})">${a.verified?'Unverify':'Verify'}</button><button class="btn-suspend" onclick="toggleSuspendArtist(${a.id})">${a.suspended?'Unsuspend':'Suspend'}</button></td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+/* ============ CUSTOM CURSOR ============ */
+const cursorDot=document.getElementById('cursorDot'), cursorRing=document.getElementById('cursorRing');
+let mouseX=0,mouseY=0,ringX=0,ringY=0;
+document.addEventListener('mousemove', e=>{ mouseX=e.clientX; mouseY=e.clientY; cursorDot.style.transform=`translate(${mouseX}px,${mouseY}px) translate(-50%,-50%)`; });
+function ringLoop(){
+  ringX += (mouseX-ringX)*0.18; ringY += (mouseY-ringY)*0.18;
+  cursorRing.style.transform = `translate(${ringX}px,${ringY}px) translate(-50%,-50%)`;
+  requestAnimationFrame(ringLoop);
+}
+ringLoop();
+document.addEventListener('mouseover', e=>{
+  if(e.target.closest('a,button,.plate-card,.art-card,input,select,textarea')) cursorRing.classList.add('hover');
+});
+document.addEventListener('mouseout', e=>{
+  if(e.target.closest('a,button,.plate-card,.art-card,input,select,textarea')) cursorRing.classList.remove('hover');
+});
+
+/* ============ MAGNETIC BUTTONS ============ */
+function initMagneticButtons(){ return;
+  document.querySelectorAll('.btn').forEach(btn=>{
+    if(btn.dataset.magnetic) return;
+    btn.dataset.magnetic='1';
+    btn.addEventListener('mousemove', e=>{
+      const r=btn.getBoundingClientRect();
+      const relX=e.clientX-(r.left+r.width/2), relY=e.clientY-(r.top+r.height/2);
+      btn.style.transform=`translate(${relX*0.22}px, ${relY*0.32}px)`;
+    });
+    btn.addEventListener('mouseleave', ()=>{ btn.style.transform='translate(0,0)'; });
+  });
+}
+
+/* ============ FILM GRAIN ============ */
+function initGrain(){ return;
+  try{
+    const canvas=document.getElementById('grainCanvas');
+    const ctx=canvas.getContext('2d');
+    if(!ctx) return;
+    canvas.width=180; canvas.height=180;
+    function draw(){
+      const w=canvas.width,h=canvas.height;
+      const imgData=ctx.createImageData(w,h);
+      for(let i=0;i<imgData.data.length;i+=4){
+        const v=(Math.random()*255)|0;
+        imgData.data[i]=v; imgData.data[i+1]=v; imgData.data[i+2]=v; imgData.data[i+3]=255;
+      }
+      ctx.putImageData(imgData,0,0);
+    }
+    draw();
+    setInterval(draw, 110);
+  } catch(e){ /* canvas unsupported — grain is a nice-to-have, safe to skip */ }
+}
+
+/* ============ ONE-TIME SCRAMBLE / DECODE TEXT REVEAL ============ */
+function scrambleReveal(el){
+  if(el.dataset.scrambled) return;
+  el.dataset.scrambled='1';
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*+-·';
+  const finalText = el.textContent;
+  let frame = 0;
+  const totalFrames = 26;
+  const perLetterDelay = 1.4;
+  function tick(){
+    let out='';
+    for(let i=0;i<finalText.length;i++){
+      const ch = finalText[i];
+      if(ch===' '){ out+=' '; continue; }
+      const revealFrame = i*perLetterDelay;
+      if(frame >= revealFrame + totalFrames) out += ch;
+      else if(frame >= revealFrame) out += chars[Math.floor(Math.random()*chars.length)];
+      else out += ' ';
+    }
+    el.textContent = out;
+    frame++;
+    if(frame < finalText.length*perLetterDelay + totalFrames) requestAnimationFrame(tick);
+    else el.textContent = finalText;
+  }
+  tick();
+}
+function initScrambleReveal(){ document.querySelectorAll('.shimmer-text').forEach(scrambleReveal); }
+
+/* ============ TILT-ON-HOVER (cards) ============ */
+function initTilt(selector){ return;
+  document.querySelectorAll(selector).forEach(card=>{
+    if(card.dataset.tilt) return;
+    card.dataset.tilt='1';
+    card.addEventListener('mousemove', e=>{
+      if(prefersReducedMotion) return;
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+      const rx=(py-0.5)*-12, ry=(px-0.5)*12;
+      card.style.transform=`perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
+  });
+}
+
+/* ============ HOVER DISTORTION (media) ============ */
+function initMediaDistort(selector){ return;
+  document.querySelectorAll(selector).forEach(el=>{
+    if(el.dataset.distort) return;
+    el.dataset.distort='1';
+    let raf=null, t=0;
+    el.addEventListener('mouseenter', ()=>{
+      if(prefersReducedMotion) return;
+      cancelAnimationFrame(raf);
+      const dispMap=document.getElementById('dispMap'), turb=document.getElementById('turb');
+      function loop(){
+        t+=0.06;
+        dispMap.setAttribute('scale', 20+Math.sin(t)*6);
+        turb.setAttribute('seed', Math.floor((t*4)%50));
+        raf=requestAnimationFrame(loop);
+      }
+      loop();
+    });
+    el.addEventListener('mouseleave', ()=>{
+      cancelAnimationFrame(raf);
+      const dispMap=document.getElementById('dispMap');
+      if(dispMap) dispMap.setAttribute('scale', 0);
+    });
+  });
+}
+
+
+function initSparkles(containerId, count){ return;
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  const colors=[YELLOW,ROSE,TEAL];
+  let html='';
+  for(let i=0;i<count;i++){
+    const size = 2 + Math.random()*3;
+    const left = Math.random()*100, top = Math.random()*100;
+    const dur = 2 + Math.random()*2.5, delay = Math.random()*3;
+    const color = colors[i%colors.length];
+    html += `<span class="sparkle" style="width:${size}px;height:${size}px;left:${left}%;top:${top}%;background:${color};color:${color};animation-duration:${dur}s;animation-delay:${delay}s;"></span>`;
+  }
+  el.innerHTML = html;
+}
+
+/* ============ INIT ============ */
+populateSelectOptions();
+initTicker();
+initFilters();
+renderEvents();
+initClassesFilters();
+renderClasses();
+initDirectory();
+renderArtists();
+renderHomeFeatured();
+renderShortlistPanels();
+updateCartBadge();
+renderPortalArea();
+renderDisciplineChips('ar_disciplines');
+initSparkles('heroSparkles', 30);
+initGrain();
+initMotionBg();
+initMouseParallax();
+initMagneticButtons();
+initTilt('.chapter-visual');
+initMediaDistort('.chapter-visual');
+document.querySelectorAll('#page-home .shimmer-text').forEach(scrambleReveal);
+checkReveals();
+</script>
 </body>
 </html>
